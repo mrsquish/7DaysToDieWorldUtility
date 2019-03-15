@@ -11,7 +11,7 @@ namespace _7DaysToDie.Model
         public int Height { get; set; }
         public int Width { get; set; }
 
-        private WorldSize()
+        internal WorldSize()
         {
         }
 
