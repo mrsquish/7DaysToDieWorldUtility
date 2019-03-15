@@ -1,0 +1,42 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/7DaysToDieWorldUtil/v15
+/7DaysToDie.Model/bin/Debug
+/7DaysToDie.Model/obj/Debug
+/7DaysToDie.Operations/obj/Debug
+/FreeImage.Net/.vs/FreeImage.NET/v15
+/FreeImage.Net/Backup
+/FreeImage.Net/Bin
+/FreeImage.Net/Library/bin/Debug
+/FreeImage.Net/Library/obj
+/FreeImage.Net/packages/NUnit.3.11.0
+/FreeImage.Net/Samples/Sample 01 - Loading and saving/bin/Debug
+/FreeImage.Net/Samples/Sample 01 - Loading and saving/obj/Debug
+/FreeImage.Net/Samples/Sample 02 - Multipaged bitmaps/bin/Debug
+/FreeImage.Net/Samples/Sample 02 - Multipaged bitmaps/obj/Debug
+/FreeImage.Net/Samples/Sample 03 - Allocating/bin/Debug
+/FreeImage.Net/Samples/Sample 03 - Allocating/obj/Debug
+/FreeImage.Net/Samples/Sample 04 - Getting bitmap informations/bin/Debug
+/FreeImage.Net/Samples/Sample 04 - Getting bitmap informations/obj/Debug
+/FreeImage.Net/Samples/Sample 05 - Working with pixels/bin/Debug
+/FreeImage.Net/Samples/Sample 05 - Working with pixels/obj/Debug
+/FreeImage.Net/Samples/Sample 06 - Converting/bin/Debug
+/FreeImage.Net/Samples/Sample 06 - Converting/obj/Debug
+/FreeImage.Net/Samples/Sample 07 - ICC Profiles/bin/Debug
+/FreeImage.Net/Samples/Sample 07 - ICC Profiles/obj/Debug
+/FreeImage.Net/Samples/Sample 08 - Creating a plugin/bin/Debug
+/FreeImage.Net/Samples/Sample 08 - Creating a plugin/obj/Debug
+/FreeImage.Net/Samples/Sample 09 - Working with streams/bin/Debug
+/FreeImage.Net/Samples/Sample 09 - Working with streams/obj/Debug
+/FreeImage.Net/Samples/Sample 10 - Metadata/bin/Debug
+/FreeImage.Net/Samples/Sample 10 - Metadata/obj/Debug
+/FreeImage.Net/Samples/Sample 11 - Using the FreeImageBitmap class/bin/Debug
+/FreeImage.Net/Samples/Sample 11 - Using the FreeImageBitmap class/obj/Debug
+/FreeImage.Net/SourceFileMerger/bin/Debug
+/FreeImage.Net/SourceFileMerger/obj/Debug
+/FreeImage.Net/UnitTest/bin/Debug
+/FreeImage.Net/UnitTest/obj/Debug
+/FreeImage.Net/UpgradeLog.htm
+/packages
