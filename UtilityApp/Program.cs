@@ -12,6 +12,9 @@ using _7DaysToDie.Model;
 
 namespace _7DaysToDieWorldUtil
 {
+
+    // Implement this : https://github.com/Auburns/FastNoise_CSharp
+    //http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
     class Program
     {
         static void Main(string[] args)
