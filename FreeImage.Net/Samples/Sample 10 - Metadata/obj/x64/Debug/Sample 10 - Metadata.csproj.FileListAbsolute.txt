@@ -1,0 +1,14 @@
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\FreeImage.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\Sample10.exe.config
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\Sample10.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\Sample10.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\FreeImageNET.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\FreeImageNET.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\bin\Debug\FreeImageNET.xml
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample 10 - Metadata.csprojAssemblyReference.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample10.MainForm.resources
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample 10 - Metadata.csproj.GenerateResource.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample 10 - Metadata.csproj.CoreCompileInputs.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample 10 - Metadata.csproj.CopyComplete
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample10.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 10 - Metadata\obj\x64\Debug\Sample10.pdb

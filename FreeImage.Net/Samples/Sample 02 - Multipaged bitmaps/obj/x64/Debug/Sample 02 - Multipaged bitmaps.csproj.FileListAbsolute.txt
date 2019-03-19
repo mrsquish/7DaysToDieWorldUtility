@@ -1,0 +1,13 @@
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\FreeImage.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\multipaged.tif
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\Sample02.exe.config
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\Sample02.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\Sample02.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\FreeImageNET.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\FreeImageNET.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\bin\Debug\FreeImageNET.xml
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\obj\x64\Debug\Sample 02 - Multipaged bitmaps.csprojAssemblyReference.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\obj\x64\Debug\Sample 02 - Multipaged bitmaps.csproj.CoreCompileInputs.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\obj\x64\Debug\Sample 02 - Multipaged bitmaps.csproj.CopyComplete
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\obj\x64\Debug\Sample02.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 02 - Multipaged bitmaps\obj\x64\Debug\Sample02.pdb

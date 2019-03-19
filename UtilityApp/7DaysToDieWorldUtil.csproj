@@ -67,9 +67,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\7DaysToDie.Model\7DaysToDie.Model.csproj">
+    <ProjectReference Include="..\7DaysToDie.Model\7DaysToDie.Lib.csproj">
       <Project>{71a4a45d-2c64-4769-b2cc-45ae10f72946}</Project>
-      <Name>7DaysToDie.Model</Name>
+      <Name>7DaysToDie.Lib</Name>
     </ProjectReference>
     <ProjectReference Include="..\FreeImage.Net\Library\Library.csproj">
       <Project>{6598a7cd-8f27-4d3f-a675-5ae63113a7c3}</Project>

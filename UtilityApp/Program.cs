@@ -27,24 +27,25 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
-            
+
+            using (var world = World.LoadWorldPath(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k"))
+            {
+                world.GenerateBiomes();
+                //world.RegenerateHeightMap();
+                //world.LevelAllPrefabsAtGroundHeight();
+                //world.SaveHeightMapPng();
+                
+            }            
+        }
+
+        public static void AdjustPrefabHeight()
+        {
             using (var world = World.LoadWorldPath(@"C:\Users\ahardy\Documents\HeightMaps"))
             {
-                world.HeightMapTga = @"C:\Users\ahardy\Documents\HeightMaps\ExampleHeightMap.tga";
+                world.HeightMapPNG = @"C:\Users\ahardy\Documents\HeightMaps\ExampleHeightMap.tga";
                 world.LevelAllPrefabsAtGroundHeight();
                 world.Prefabs.Save();
             }
-            /*
-            // Store the bitmap to disk
-            if (!FreeImage.SaveEx(ref dib, "SampleOut02.jpg", FREE_IMAGE_SAVE_FLAGS.DEFAULT, true))
-            {
-                Console.WriteLine("Error while saving 'SampleOut02.jpg'");
-                FreeImage.UnloadEx(ref dib);
-            }
-            */
-
-            Console.Read();
-
         }
         
         public static void ConfigureLoggingFramework()

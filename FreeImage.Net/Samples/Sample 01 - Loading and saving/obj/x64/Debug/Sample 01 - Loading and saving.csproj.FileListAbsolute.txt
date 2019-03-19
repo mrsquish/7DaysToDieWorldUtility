@@ -1,0 +1,13 @@
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\FreeImage.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\Sample.jpg
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\Sample01.exe.config
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\Sample01.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\Sample01.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\FreeImageNET.dll
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\FreeImageNET.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\bin\Debug\FreeImageNET.xml
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\obj\x64\Debug\Sample 01 - Loading and saving.csprojAssemblyReference.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\obj\x64\Debug\Sample 01 - Loading and saving.csproj.CoreCompileInputs.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\obj\x64\Debug\Sample 01 - Loading and saving.csproj.CopyComplete
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\obj\x64\Debug\Sample01.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\Samples\Sample 01 - Loading and saving\obj\x64\Debug\Sample01.pdb

@@ -1,0 +1,5 @@
+C:\Users\OWNER\Source\Repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Operations\bin\x64\Debug\7DaysToDie.Operations.dll
+C:\Users\OWNER\Source\Repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Operations\bin\x64\Debug\7DaysToDie.Operations.pdb
+C:\Users\OWNER\Source\Repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Operations\obj\x64\Debug\7DaysToDie.Operations.csproj.CoreCompileInputs.cache
+C:\Users\OWNER\Source\Repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Operations\obj\x64\Debug\7DaysToDie.Operations.dll
+C:\Users\OWNER\Source\Repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Operations\obj\x64\Debug\7DaysToDie.Operations.pdb

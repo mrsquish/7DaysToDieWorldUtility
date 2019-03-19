@@ -1,0 +1,8 @@
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\bin\Debug\FreeImage.cs.template
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\bin\Debug\sourcefilemerger.exe.config
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\bin\Debug\sourcefilemerger.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\bin\Debug\sourcefilemerger.pdb
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\obj\x64\Debug\SourceFileMerger.csprojAssemblyReference.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\obj\x64\Debug\SourceFileMerger.csproj.CoreCompileInputs.cache
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\obj\x64\Debug\sourcefilemerger.exe
+C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\FreeImage.Net\SourceFileMerger\obj\x64\Debug\sourcefilemerger.pdb
