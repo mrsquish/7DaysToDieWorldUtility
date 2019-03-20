@@ -8,6 +8,8 @@ namespace _7DaysToDie.Model.Noise
 {
     public class NoiseFactory
     {
+        private Random _random = new Random();
+
         public FastNoise GetCellularNoiseForLandscape()
         {
             var myNoise = new FastNoise();
@@ -27,15 +29,16 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetFrequency((float).0015);
             return myNoise;
         }
-
-        public FastNoise GetCellularNoiseForBiome()
-        {
-            var myNoise = new FastNoise();
+        
+        public FastNoise GetCellularNoiseForBiome(float frequency)
+        {            
+            var myNoise = new FastNoise(_random.Next());
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
             myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Natural);
-            myNoise.SetCellularReturnType(FastNoise.CellularReturnType.CellValue);
-            myNoise.SetFrequency((float).0010);
+            myNoise.SetCellularReturnType(FastNoise.CellularReturnType.CellValue);            
+            myNoise.SetFrequency(frequency);
             return myNoise;
         }
+        
     }
 }

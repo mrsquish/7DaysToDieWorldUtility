@@ -53,8 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Decoration.cs" />
+    <Compile Include="Extensions\BaseExtensions.cs" />
+    <Compile Include="Images\BiomeImagePng.cs" />
     <Compile Include="Noise\FastNoise.cs" />
     <Compile Include="Noise\NoiseFactory.cs" />
+    <Compile Include="Base\PNGImage.cs" />
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vector3T.cs" />

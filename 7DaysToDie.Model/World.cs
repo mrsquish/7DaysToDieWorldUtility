@@ -55,73 +55,6 @@ namespace _7DaysToDie.Model
             return (byte)((int) (ZerBasedNoise * 60 + 20));
         }
 
-        public void GenerateBiomes()
-        {
-            var bitMap = LoadBiomesPng();
-            var noiseFactory = new NoiseFactory();
-
-            var myNoise = noiseFactory.GetCellularNoiseForBiome();
-            for (int i = 0; i < FreeImage.GetHeight(bitMap); i++)
-            {
-                Scanline<RGBTRIPLE> scanline = new Scanline<RGBTRIPLE>(bitMap, i);
-                RGBTRIPLE[] rgbt = scanline.Data;
-                for (int j = 0; j < rgbt.Length; j++)
-                {
-                    var noise = myNoise.GetNoise(i, j);
-                    /*
-                    if (noise < -0.1)
-                    {
-                        rgbt[j].rgbtBlue = 255;
-                        rgbt[j].rgbtGreen = 0;
-                        rgbt[j].rgbtRed = 186;
-                    }
-                    else if (noise < -0.4)
-                    {
-                        rgbt[j].rgbtBlue = 0;
-                        rgbt[j].rgbtGreen = 168;
-                        rgbt[j].rgbtRed = 255;                        
-                    }
-                    else if (noise < 1.1)
-                    {
-                        rgbt[j].rgbtBlue = 0;
-                        rgbt[j].rgbtGreen = 64;
-                        rgbt[j].rgbtRed = 0;
-                    }
-                    else
-                    {
-                        rgbt[j].rgbtBlue = 255;
-                        rgbt[j].rgbtGreen = 255;
-                        rgbt[j].rgbtRed = 255;
-                    } */                       
-                    rgbt[j].Color = GetBiomeFromNoise(noise);
-                    
-                }
-                _logger.Info($"Writing Line {i}");
-                scanline.Data = rgbt;
-            }
-            SaveBiomesPng(bitMap);
-        }
-
-
-        private Color GetBiomeFromNoise(float noise)
-        {
-            if (noise < -0.1)
-                return BurntForestColor();
-            if (noise < -0.4)
-                return WasteLandColor();
-            if (noise < 1.1)
-                return PineForestColor();
-            return SnowColor();
-        }
-
-        private Color SnowColor() => Color.FromArgb(255, 255, 255);
-
-        private Color PineForestColor() => Color.FromArgb(0, 64, 0);
-
-        public Color WasteLandColor() => Color.FromArgb(255, 168, 0);
-
-        public Color BurntForestColor() => Color.FromArgb(186, 0, 255);
-
 
         public void RegenerateHeightMap()
         {
@@ -132,7 +65,7 @@ namespace _7DaysToDie.Model
              * Simplex with 0.001 freq = rolling hills.
              */
 
-            var myNoise = noiseFactory.GetCellularNoiseForBiome();
+            var myNoise = noiseFactory.GetCellularNoiseForBiome((float)0.02);
             for (int i = 0; i < Height; i++)
             {
                 Scanline<RGBTRIPLE> scanline = new Scanline<RGBTRIPLE>(_bitMap, i);

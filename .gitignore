@@ -3,6 +3,8 @@
 ################################################################################
 
 /.vs/7DaysToDieWorldUtil/v15
+**/obj/*
+**/bin/*
 /7DaysToDie.Model/bin/Debug
 /7DaysToDie.Model/obj/Debug
 /7DaysToDie.Operations/obj/Debug
@@ -40,3 +42,6 @@
 /FreeImage.Net/UnitTest/obj/Debug
 /FreeImage.Net/UpgradeLog.htm
 /packages
+/FreeImage.Net/Samples/Sample 01 - Loading and saving/obj/x64/Debug
+/FreeImage.Net/Samples/Sample 02 - Multipaged bitmaps/obj/x64/Debug
+/FreeImage.Net/Samples/Sample 03 - Allocating/obj/x64/Debug

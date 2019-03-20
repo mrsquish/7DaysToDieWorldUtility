@@ -9,6 +9,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using _7DaysToDie.Model;
+using _7DaysToDie.Model.Images;
 
 namespace _7DaysToDieWorldUtil
 {
@@ -27,15 +28,29 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
+            BiomeTest();
 
-            using (var world = World.LoadWorldPath(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k"))
+            //@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k
+            //
+            /*
+            using (var world = World.LoadWorldPath(@"C:\Users\ahardy\Documents\HeightMaps"))
             {
                 world.GenerateBiomes();
                 //world.RegenerateHeightMap();
                 //world.LevelAllPrefabsAtGroundHeight();
                 //world.SaveHeightMapPng();
                 
-            }            
+            } */
+        }
+
+        public static void BiomeTest()
+        {
+            using (var biomes = new Biomes(1092))
+            {
+                biomes.Create();
+                biomes.GenerateBiomes2();
+                biomes.Save(@"C:\Users\ahardy\Documents\HeightMaps\Testing\Biomes.png");
+            }
         }
 
         public static void AdjustPrefabHeight()
