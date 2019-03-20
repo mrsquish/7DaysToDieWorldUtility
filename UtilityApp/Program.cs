@@ -45,7 +45,7 @@ namespace _7DaysToDieWorldUtil
 
         public static void BiomeTest()
         {
-            using (var biomes = new Biomes(1092))
+            using (var biomes = new Biomes(256))
             {
                 biomes.Create();
                 biomes.GenerateBiomes2();

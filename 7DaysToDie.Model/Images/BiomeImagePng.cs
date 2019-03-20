@@ -25,7 +25,7 @@ namespace _7DaysToDie.Model.Images
         public void GenerateBiomes2()
         {
             var myNoise = new FastNoise(46549874);
-            myNoise.SetFrequency((float)0.01);
+            myNoise.SetFrequency((float)0.02);
             myNoise.SetGradientPerturbAmp((float)1);
             myNoise.SetInterp(FastNoise.Interp.Hermite);
 
@@ -40,17 +40,22 @@ namespace _7DaysToDie.Model.Images
                     float y = j;
                     //float z = i;
                     myNoise.GradientPerturb(ref x,  ref y);
-                    //_logger.Info($"Generating {i}[{x-i}] {j}[{y-j}]");
-                    //rgbt[j].Color = BaseExtensions.ColorFromHSV(((x - i)+1)*180, (y - j).Normalise(), 1);
-                    var amplitude = ((x - i) + 1) * 180;
-                    rgbt[j].rgbtBlue = (byte) amplitude;
-                    rgbt[j].rgbtGreen= (byte)amplitude;
-                    rgbt[j].rgbtRed = (byte)amplitude;
-                    /*
-                    //_logger.Info($"Noise = {noise}");                    
-                    rgbt[j].rgbtBlue = (byte)x.ToRGB();
-                    rgbt[j].rgbtGreen = (byte)y.ToRGB();
-                    rgbt[j].rgbtRed = (byte)z.ToRGB();*/
+                    if (true)
+                    {
+                        rgbt[j].Color = BaseExtensions.ColorFromHSV(((x - i) + 1) * 180, (y - j).Normalise(), 1);
+                    }
+                    else
+                    {
+                        var amplitude = (float)0;
+                        x = x - i;
+                        y = y - j;
+                        if (x > 0.5)
+                            amplitude = 50 + x * 200;
+                        else 
+                        rgbt[j].rgbtBlue = (byte)amplitude;
+                        rgbt[j].rgbtGreen = (byte)amplitude;
+                        rgbt[j].rgbtRed = (byte)amplitude;
+                    }
                 }
                 scanline.Data = rgbt;
             }
