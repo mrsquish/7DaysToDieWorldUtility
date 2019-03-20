@@ -28,7 +28,8 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
-            BiomeTest();
+            //BiomeTest();
+            HeightMapTest();
 
             //@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k
             //
@@ -43,13 +44,23 @@ namespace _7DaysToDieWorldUtil
             } */
         }
 
+        public static void HeightMapTest()
+        {
+            using (var heightMap = new HeightMapPng(4096))
+            {
+                heightMap.Create();
+                heightMap.RegenerateHeightMap();
+                heightMap.Save(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k\dtm.png");
+            }
+        }
+
         public static void BiomeTest()
         {
-            using (var biomes = new Biomes(256))
+            using (var biomes = new Biomes(4096))
             {
                 biomes.Create();
-                biomes.GenerateBiomes2();
-                biomes.Save(@"C:\Users\ahardy\Documents\HeightMaps\Testing\Biomes.png");
+                biomes.GenerateBiomes();
+                biomes.Save(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k\Biomes.png");
             }
         }
 

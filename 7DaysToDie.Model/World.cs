@@ -49,42 +49,6 @@ namespace _7DaysToDie.Model
             }
         }
 
-        public byte GetStandardisedHeight(float noise)
-        {
-            var ZerBasedNoise = noise + 1;
-            return (byte)((int) (ZerBasedNoise * 60 + 20));
-        }
-
-
-        public void RegenerateHeightMap()
-        {
-            LoadHeightMapPng();
-            var noiseFactory = new NoiseFactory();
-            /* Value noise type with .005 frequency = sharp (square) rolling hills.
-             * Value Fractal with 0.005 freq = more natural hills, less frequency would be better.
-             * Simplex with 0.001 freq = rolling hills.
-             */
-
-            var myNoise = noiseFactory.GetCellularNoiseForBiome((float)0.02);
-            for (int i = 0; i < Height; i++)
-            {
-                Scanline<RGBTRIPLE> scanline = new Scanline<RGBTRIPLE>(_bitMap, i);
-                RGBTRIPLE[] rgbt = scanline.Data;
-                for (int j = 0; j < rgbt.Length; j++)
-                {
-                    var noise = myNoise.GetNoise(i, j);
-                    
-                    var grey = GetStandardisedHeight(noise);
-                    rgbt[j].rgbtBlue = grey;
-                    rgbt[j].rgbtGreen = grey;
-                    rgbt[j].rgbtRed = grey;
-                    
-                }
-                _logger.Info($"Writing Line {i}");
-                scanline.Data = rgbt;
-            }
-        }
-
         public FIBITMAP BitMap 
         {
             get

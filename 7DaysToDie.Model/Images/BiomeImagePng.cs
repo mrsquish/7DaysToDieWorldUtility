@@ -25,7 +25,7 @@ namespace _7DaysToDie.Model.Images
         public void GenerateBiomes2()
         {
             var myNoise = new FastNoise(46549874);
-            myNoise.SetFrequency((float)0.02);
+            myNoise.SetFrequency((float)0.01);
             myNoise.SetGradientPerturbAmp((float)1);
             myNoise.SetInterp(FastNoise.Interp.Hermite);
 
@@ -42,7 +42,7 @@ namespace _7DaysToDie.Model.Images
                     myNoise.GradientPerturb(ref x,  ref y);
                     if (true)
                     {
-                        rgbt[j].Color = BaseExtensions.ColorFromHSV(((x - i) + 1) * 180, (y - j).Normalise(), 1);
+                        rgbt[j].Color = BaseExtensions.BiomeFromHSV(((x - i) + 1) * 180, (y - j).Normalise(), 1);
                     }
                     else
                     {
@@ -66,7 +66,7 @@ namespace _7DaysToDie.Model.Images
         {
             var noiseFactory = new NoiseFactory();
 
-            var myNoise = noiseFactory.GetCellularNoiseForBiome((float)0.002);
+            var myNoise = noiseFactory.GetCellularNoiseForBiome((float)0.001);
             for (int i = 0; i < FreeImage.GetHeight(_bitMap); i++)
             {
                 _logger.Info($"Generating Line {i}");
@@ -85,24 +85,16 @@ namespace _7DaysToDie.Model.Images
         private Color GetBiomeFromNoise(float noise)
         {
             if (noise < _wasteLandPeak)
-                return WasteLandColor;
+                return Biome.WasteLandColor;
             if (noise < _burntForestPeak)
-                return BurntForestColor;
+                return Biome.BurntForestColor;
             if (noise < _pineForestPeak)
-                return PineForestColor;
+                return Biome.PineForestColor;
             if (noise < _dessertPeak)
-                return DessertColor;
-            return SnowColor;
+                return Biome.DessertColor;
+            return Biome.SnowColor;
         }
 
-        public readonly Color SnowColor = Color.FromArgb(255, 255, 255);
-
-        public readonly Color PineForestColor = Color.FromArgb(0, 64, 0);
-
-        public readonly Color DessertColor = Color.FromArgb(255, 200, 0);
-
-        public readonly Color WasteLandColor = Color.FromArgb(255, 168, 0);
-
-        public readonly Color BurntForestColor = Color.FromArgb(186, 0, 255);
+        
     }
 }
