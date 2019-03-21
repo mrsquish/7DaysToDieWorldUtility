@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Biomes\Base\BiomeBase.cs" />
+    <Compile Include="Biomes\DesertCanyonBiome.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
@@ -61,7 +63,7 @@
     <Compile Include="Noise\FeatureRockNoise.cs" />
     <Compile Include="Noise\INoise.cs" />
     <Compile Include="Noise\NoiseFactory.cs" />
-    <Compile Include="Base\PNGImage.cs" />
+    <Compile Include="Base\PngImageSquare.cs" />
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vector3T.cs" />
@@ -78,8 +80,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Biomes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
