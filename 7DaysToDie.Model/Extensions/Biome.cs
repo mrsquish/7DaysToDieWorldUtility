@@ -13,7 +13,7 @@ namespace _7DaysToDie.Model.Extensions
 
         public static readonly Color PineForestColor = Color.FromArgb(0, 64, 0);
 
-        public static readonly Color DessertColor = Color.FromArgb(255, 228, 119);
+        public static readonly Color DesertColor = Color.FromArgb(255, 228, 119);
 
         public static readonly Color WasteLandColor = Color.FromArgb(255, 168, 0);
 

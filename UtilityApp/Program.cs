@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -13,13 +14,21 @@ using _7DaysToDie.Model.Images;
 
 namespace _7DaysToDieWorldUtil
 {
-
     // Implement this : https://github.com/Auburns/FastNoise_CSharp
     //http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
     class Program
     {
+        public static string TestingPath;
+
         static void Main(string[] args)
         {
+            if (Directory.Exists("C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing"))
+                TestingPath = "C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing";
+            else
+            {
+                TestingPath = "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k";
+            }
+
             ConfigureLoggingFramework();
             var logger = LogManager.GetCurrentClassLogger();
             // Check if FreeImage.dll is available (can be in %path%).
@@ -46,11 +55,11 @@ namespace _7DaysToDieWorldUtil
 
         public static void HeightMapTest()
         {
-            using (var heightMap = new HeightMapPng(4096))
+            using (var heightMap = new DesertCanyonBiomeHeightMap(1096))
             {
                 heightMap.Create();
                 heightMap.RegenerateHeightMap();
-                heightMap.Save(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k\dtm.png");
+                heightMap.Save(Path.Combine(TestingPath, "dtm.png"));
             }
         }
 
@@ -60,15 +69,15 @@ namespace _7DaysToDieWorldUtil
             {
                 biomes.Create();
                 biomes.GenerateBiomes();
-                biomes.Save(@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k\Biomes.png");
+                biomes.Save(Path.Combine(TestingPath, "Biomes.png"));
             }
         }
 
         public static void AdjustPrefabHeight()
         {
-            using (var world = World.LoadWorldPath(@"C:\Users\ahardy\Documents\HeightMaps"))
+            using (var world = World.LoadWorldPath(TestingPath))
             {
-                world.HeightMapPNG = @"C:\Users\ahardy\Documents\HeightMaps\ExampleHeightMap.tga";
+                world.HeightMapPNG = Path.Combine(TestingPath, "dtm.png");
                 world.LevelAllPrefabsAtGroundHeight();
                 world.Prefabs.Save();
             }

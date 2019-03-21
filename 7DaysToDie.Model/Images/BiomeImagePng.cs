@@ -91,7 +91,7 @@ namespace _7DaysToDie.Model.Images
             if (noise < _pineForestPeak)
                 return Biome.PineForestColor;
             if (noise < _dessertPeak)
-                return Biome.DessertColor;
+                return Biome.DesertColor;
             return Biome.SnowColor;
         }
 

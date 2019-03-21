@@ -42,7 +42,7 @@ namespace _7DaysToDie.Model.Extensions
             else if (hi == 1)
                 return Biome.BurntForestColor;
             else if (hi == 2)
-                return Biome.DessertColor;
+                return Biome.DesertColor;
             else if (hi == 3)
             {
                 return Biome.PineForestColor;

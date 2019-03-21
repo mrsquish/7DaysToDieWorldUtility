@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using FreeImageAPI;
@@ -8,42 +9,41 @@ using _7DaysToDie.Model.Noise;
 
 namespace _7DaysToDie.Model.Images
 {
-    public class HeightMapPng : PngImageSquare
+    public class DesertCanyonBiomeHeightMap : PngImageSquare
     {
-        public HeightMapPng(int size) : base(size)
+        private float _canyonFactor = 50;
+        private float _riverFactor = 15;
+
+        public DesertCanyonBiomeHeightMap(int size) : base(size)
         {
         }
         
         public void RegenerateHeightMap()
         {            
             var noiseFactory = new NoiseFactory();
-            /* Value noise type with .005 frequency = sharp (square) rolling hills.
-             * Value Fractal with 0.005 freq = more natural hills, less frequency would be better.
-             * Simplex with 0.001 freq = rolling hills.
-             */
-            var myNoise = noiseFactory.GetValueFractalForLandscape2();
-            var cellNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float) 0.02);
+            var featureRockNoise = new FeatureRockNoise(noiseFactory, 5);
+            var myNoise = noiseFactory.GetValueFractalForDesertLandscape();
+            var cellNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float) 0.015);
             for (int i = 0; i < Size; i++)
             {
                 Scanline<RGBTRIPLE> scanline = new Scanline<RGBTRIPLE>(_bitMap, i);
                 RGBTRIPLE[] rgbt = scanline.Data;
                 for (int j = 0; j < rgbt.Length; j++)
                 {
-                    float x = j;
-                    float y = i;
-                    //float z = i;
-                    //myNoise.GradientPerturbFractal(ref x, ref y);
-
                     var noise = myNoise.GetNoise(i, j);
                     var levelAdd =  cellNoise.GetNoise(i, j);
 
-                    var grey = GetStandardisedHeight(noise);
-                    
-                    if (grey > 60)
-                    {
-                        grey += (levelAdd*10+20);
-                    }
+                    var grey = GetStandardisedHeight(noise, 50) + 10;
 
+                    if (grey < _riverFactor)
+                    {
+                        grey = grey + (noise);
+
+                    } else if (grey > _canyonFactor)
+                    {
+                        grey += (levelAdd * 2 + 4) + featureRockNoise.GetNoise(i, j);
+                    }
+                    
                     var greyByte = (byte) grey;
                     rgbt[j].rgbtBlue = greyByte;
                     rgbt[j].rgbtGreen = greyByte;
@@ -54,9 +54,9 @@ namespace _7DaysToDie.Model.Images
             }
         }
 
-        public float GetStandardisedHeight(float noise)
+        public float GetStandardisedHeight(float noise, float maxHeight)
         {            
-            return (noise * 30 + 80);
+            return (noise * (maxHeight/2) + maxHeight);
         }
     }
 }

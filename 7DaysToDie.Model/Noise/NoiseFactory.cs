@@ -19,7 +19,6 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetCellularJitter((float)0.45);
             myNoise.SetFrequency(freq);
             myNoise.SetGradientPerturbAmp((float)30.0);
-
             return myNoise;
         }
 
@@ -36,7 +35,33 @@ namespace _7DaysToDie.Model.Noise
             return myNoise;
         }
 
-        public FastNoise GetValueFractalForLandscape2()
+        public FastNoise GetCellularNoiseForRockFeatures(float freq = (float)0.04)
+        {
+            var myNoise = new FastNoise();
+            myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
+            myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Natural);
+            myNoise.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Sub);
+            myNoise.SetCellularJitter((float)0.45);
+            myNoise.SetFrequency(freq);            
+            return myNoise;
+        }
+
+
+        public FastNoise GetValueFractalForRivers()
+        {
+            var myNoise = new FastNoise();
+            myNoise.SetNoiseType(FastNoise.NoiseType.ValueFractal);
+            myNoise.SetFractalType(FastNoise.FractalType.RigidMulti);
+            myNoise.SetInterp(FastNoise.Interp.Hermite);
+            myNoise.SetFractalGain((float)0.9);
+            myNoise.SetFractalOctaves(1);
+            myNoise.SetFractalLacunarity((float)1.0);
+            myNoise.SetFrequency((float).001);
+            return myNoise;
+        }
+
+
+        public FastNoise GetValueFractalForDesertLandscape()
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.ValueFractal);

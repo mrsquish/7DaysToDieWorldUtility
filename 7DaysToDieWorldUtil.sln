@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "FreeImage.Net\Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7DaysToDie.Lib", "7DaysToDie.Model\7DaysToDie.Lib.csproj", "{71A4A45D-2C64-4769-B2CC-45AE10F72946}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FastNoiseSIMD", "FastNoiseSIMD\FastNoiseSIMD.vcxproj", "{3B19AC63-CC16-44B1-A94B-DDA23032ACD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{71A4A45D-2C64-4769-B2CC-45AE10F72946}.Debug|x64.Build.0 = Debug|x64
 		{71A4A45D-2C64-4769-B2CC-45AE10F72946}.Release|x64.ActiveCfg = Release|x64
 		{71A4A45D-2C64-4769-B2CC-45AE10F72946}.Release|x64.Build.0 = Release|x64
+		{3B19AC63-CC16-44B1-A94B-DDA23032ACD4}.Debug|x64.ActiveCfg = Debug|x64
+		{3B19AC63-CC16-44B1-A94B-DDA23032ACD4}.Debug|x64.Build.0 = Debug|x64
+		{3B19AC63-CC16-44B1-A94B-DDA23032ACD4}.Release|x64.ActiveCfg = Release|x64
+		{3B19AC63-CC16-44B1-A94B-DDA23032ACD4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
