@@ -16,7 +16,7 @@ namespace _7DaysToDie.Model.Biomes
         private float _canyonFactor = 50;
         private float _riverFactor = 15;
 
-        public DesertCanyonBiome(string baseDirectory, Color baseColor, int size, NoiseFactory noiseFactory) 
+        public DesertCanyonBiome(string baseDirectory, int size, NoiseFactory noiseFactory) 
             : base(Path.Combine(baseDirectory, nameof(DesertCanyonBiome)), 
                 Biome.DesertColor, size, noiseFactory)
         {
@@ -25,11 +25,16 @@ namespace _7DaysToDie.Model.Biomes
 
         public override void Generate()
         {
-            HeightMap.Create();
-            RegenerateHeightMap();
+            using (var heightMap = new PngImageSquare(Size))
+            {
+                heightMap.Create();
+                RegenerateHeightMap(heightMap);
+                heightMap.Save(Path.Combine(BaseDirectory, "dtm.png"));
+            }
+            
         }
 
-        public void RegenerateHeightMap()
+        public void RegenerateHeightMap(PngImageSquare heightMap)
         {
             var noiseFactory = new NoiseFactory();
             var featureRockNoise = new FeatureRockNoise(noiseFactory, 5);
@@ -37,8 +42,8 @@ namespace _7DaysToDie.Model.Biomes
             var cellNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015);
             for (int i = 0; i < Size; i++)
             {
-                Scanline<RGBTRIPLE> scanline = HeightMap.GetImageLine(i);
-                RGBTRIPLE[] rgbt = scanline.Data;
+                var scanline = heightMap.GetImageLine(i);
+                var rgbt = scanline.Data;
                 for (int j = 0; j < rgbt.Length; j++)
                 {
                     var noise = myNoise.GetNoise(i, j);
@@ -56,10 +61,13 @@ namespace _7DaysToDie.Model.Biomes
                         grey += (levelAdd * 2 + 4) + featureRockNoise.GetNoise(i, j);
                     }
 
-                    var greyByte = (byte)grey;
-                    rgbt[j].rgbtBlue = greyByte;
-                    rgbt[j].rgbtGreen = greyByte;
-                    rgbt[j].rgbtRed = greyByte;
+                    var greyValue = (grey);
+                    rgbt[j] = new FIRGBF(Color.Blue);
+                    /*
+                    rgbt[j].blue = (float)1;//greyValue;
+                    rgbt[j].green = (float)0;// greyValue;
+                    rgbt[j].red = (float)0;//greyValue;
+                    rgbt[j].alpha = (float)1;*/
                 }
                 _logger.Info($"Writing Line {i}");
                 scanline.Data = rgbt;

@@ -10,7 +10,9 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using _7DaysToDie.Model;
+using _7DaysToDie.Model.Biomes;
 using _7DaysToDie.Model.Images;
+using _7DaysToDie.Model.Noise;
 
 namespace _7DaysToDieWorldUtil
 {
@@ -51,15 +53,14 @@ namespace _7DaysToDieWorldUtil
                 //world.SaveHeightMapPng();
                 
             } */
+            Console.Read();
         }
 
         public static void HeightMapTest()
         {
-            using (var heightMap = new DesertCanyonBiomeHeightMap(1096))
+            using (var biome = new DesertCanyonBiome(TestingPath, 1096, new NoiseFactory()))
             {
-                heightMap.Create();
-                heightMap.RegenerateHeightMap();
-                heightMap.Save(Path.Combine(TestingPath, "dtm.png"));
+                biome.Generate();
             }
         }
 

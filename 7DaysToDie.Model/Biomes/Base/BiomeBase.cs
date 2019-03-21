@@ -13,8 +13,7 @@ namespace _7DaysToDie.Model.Biomes
 {
     public abstract class BiomeBase : IDisposable
     {
-        protected static ILogger _logger = LogManager.GetCurrentClassLogger();
-        private readonly string _baseDirectory;
+        protected static ILogger _logger = LogManager.GetCurrentClassLogger();        
         private readonly Color _baseColor;
         private readonly NoiseFactory _noiseFactory;
         
@@ -24,27 +23,22 @@ namespace _7DaysToDie.Model.Biomes
             int size,
             NoiseFactory noiseFactory)
         {
-            _baseDirectory = baseDirectory;
+            BaseDirectory = baseDirectory;
             _baseColor = baseColor;
             _noiseFactory = noiseFactory;
             Size = size;
+            if (!Directory.Exists(BaseDirectory))
+                Directory.CreateDirectory(BaseDirectory);
         }
-
-        protected PngImageSquare HeightMap { get; set; }
+        
         protected int Size { get; set; }
+        protected string BaseDirectory { get; private set; }
 
         public abstract void Generate();
-
-        public virtual void Create()
-        {
-            if (!Directory.Exists(_baseDirectory))
-                Directory.CreateDirectory(_baseDirectory);
-
-        }
-
+        
         public void Dispose()
         {
-            HeightMap?.Dispose();
+            
         }
     }
 }
