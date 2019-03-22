@@ -15,7 +15,7 @@ namespace _7DaysToDie.Model.Biomes
 
         private INoise _generalLandscapeNoise;
         private INoise _featureNoise;
-        private INoise _cellNoise;
+        private INoise _mazeNoise;
 
         public NastyBiome(string baseDirectory, int size, NoiseFactory noiseFactory)
             : base(
@@ -24,7 +24,7 @@ namespace _7DaysToDie.Model.Biomes
         {
             _featureNoise = noiseFactory.GetFeatureRockNoise((float)0.06, (float)0.1);
             _generalLandscapeNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015); 
-            _cellNoise = noiseFactory.GetCellularNoiseForMaze();
+            _mazeNoise = noiseFactory.GetCellularNoiseForMaze();
         }
 
         public override void Generate()
@@ -42,9 +42,9 @@ namespace _7DaysToDie.Model.Biomes
         {
             _baseLevel = ((float)ushort.MaxValue / 4);
             _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue / 5);
-            _cellNoise.Amplitude = (float)ushort.MaxValue;
+            _mazeNoise.Amplitude = (float)ushort.MaxValue;
             _featureNoise.Amplitude = (float)ushort.MaxValue / 15;
-            _riverFactor = _baseLevel + _cellNoise.Amplitude / (float)15;
+            _riverFactor = _mazeNoise.Amplitude - (_mazeNoise.Amplitude / (float)8);
             _canyonFactor = _baseLevel + _generalLandscapeNoise.Amplitude
                             - _generalLandscapeNoise.Amplitude / (float)1.5;
             riverLoweringFactor = (float)0.1;
@@ -64,9 +64,9 @@ namespace _7DaysToDie.Model.Biomes
 
         private ushort GetPixelShade(int x, int y)
         {
-            float level = _baseLevel + _cellNoise.GetNoise(x, y);
-
-            if (level < _riverFactor)
+            float level = _mazeNoise.GetNoise(x, y);
+            
+            if (level > _riverFactor)
             {
                 level = _baseLevel;
             }

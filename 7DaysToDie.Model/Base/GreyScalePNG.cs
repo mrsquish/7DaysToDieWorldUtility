@@ -97,8 +97,8 @@ namespace _7DaysToDie.Model
 
 
             var stream = new FileStream(path, FileMode.Create);
-
-            var encoder = new TiffBitmapEncoder {Compression = TiffCompressOption.Zip};
+            var encoder = new PngBitmapEncoder() { };
+            //var encoder = new TiffBitmapEncoder {Compression = TiffCompressOption.Zip};
 
             encoder.Frames.Add(BitmapFrame.Create(source));
             encoder.Save(stream);

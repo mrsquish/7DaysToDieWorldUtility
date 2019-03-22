@@ -10,7 +10,7 @@ namespace _7DaysToDie.Model.Noise
     {
         private readonly FastNoise _noiseGenerator;
         private float _lastNoise;
-        private int _invert;
+        private int _invert = 1;
 
 
         public GeneralNoise(FastNoise noiseGenerator)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace _7DaysToDie.Model.Biomes
         private void SetLevels()
         {
             _baseLevel = ((float)ushort.MaxValue / 8);
-            _generalLandscapeNoise.Amplitude = (float)ushort.MaxValue - ((float)ushort.MaxValue/3);
+            _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue/3);
             _cellNoise.Amplitude = (float)ushort.MaxValue / 20;
             _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;
             _riverFactor = _baseLevel + _generalLandscapeNoise.Amplitude / (float)15;
@@ -70,7 +71,7 @@ namespace _7DaysToDie.Model.Biomes
         }
         
         private ushort GetPixelShade(int x, int y)
-        {
+        {            
             float level = _baseLevel + _generalLandscapeNoise.GetNoise(x, y);
             
             if (level < _riverFactor)
@@ -84,9 +85,8 @@ namespace _7DaysToDie.Model.Biomes
             }
             else
             {
-                //_logger.Info("Normal");
-            }
-
+                //Debug.Print("Normal");
+            }            
             return level < 0 ? (ushort) 0 : (ushort) level;
         }
 
