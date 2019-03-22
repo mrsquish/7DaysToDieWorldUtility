@@ -21,6 +21,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -35,6 +36,7 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -50,16 +52,21 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\GreyScalePng.cs" />
     <Compile Include="Biomes\Base\BiomeBase.cs" />
     <Compile Include="Biomes\DesertCanyonBiome.cs" />
+    <Compile Include="Biomes\NastyBiome.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
     <Compile Include="Images\BiomeImagePng.cs" />
     <Compile Include="Noise\FastNoise.cs" />
     <Compile Include="Noise\FeatureRockNoise.cs" />
+    <Compile Include="Noise\GeneralNoise.cs" />
+    <Compile Include="Noise\NoiseBase.cs" />
     <Compile Include="Noise\INoise.cs" />
     <Compile Include="Noise\NoiseFactory.cs" />
     <Compile Include="Base\PngImageSquare.cs" />

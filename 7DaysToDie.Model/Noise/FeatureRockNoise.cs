@@ -6,29 +6,40 @@ using System.Threading.Tasks;
 
 namespace _7DaysToDie.Model.Noise
 {
-    public class FeatureRockNoise : INoise
+    public class FeatureNoise : NoiseBase, INoise
     {
         private readonly NoiseFactory _factory;
         private readonly float _amplitude;
-        private FastNoise _placementRandomiserNoise;
-        private FastNoise _featureNoise;
+        private INoise _placementRandomiserNoise;
+        private INoise _featureNoise;
+        private float _lastNoise;
+        private float _frequecyThreshold;        
 
-        public FeatureRockNoise(NoiseFactory factory, float amplitude)
-        {
-            _factory = factory;
-            _amplitude = amplitude;
-            _placementRandomiserNoise = _factory.GetCellularNoiseForLandscapeAddition((float) 0.02);
-            _featureNoise = _factory.GetCellularNoiseForRockFeatures();
+        public FeatureNoise(INoise placementRandomiserNoise, INoise featureNoise) : base()
+        {                        
+            _placementRandomiserNoise = placementRandomiserNoise;
+            _featureNoise = featureNoise;
+            _frequecyThreshold = placementRandomiserNoise.Amplitude / 10;
+            Amplitude = (float)(ushort.MaxValue / (float)5);
         }
 
-        public float GetNoise(float x, float y)
+        public override float Amplitude
         {
-            var height = _placementRandomiserNoise.GetNoise(x, y);
-            if (height < -0.6)
+            get => _featureNoise.Amplitude;
+            set => _featureNoise.Amplitude = value;
+        }
+
+        public override float LastNoise => _lastNoise;
+
+        public override float GetNoise(float x, float y)
+        {
+            _lastNoise = _placementRandomiserNoise.GetNoise(x, y);
+            if (_lastNoise < _frequecyThreshold)
             {
-                return _featureNoise.GetNoise(x, y) * (_amplitude / 2) + _amplitude;
+                return _featureNoise.GetNoise(x, y);
             }
             return 0;
         }
     }
+
 }

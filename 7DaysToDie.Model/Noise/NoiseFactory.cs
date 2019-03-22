@@ -10,7 +10,7 @@ namespace _7DaysToDie.Model.Noise
     {
         private Random _random = new Random();
 
-        public FastNoise GetCellularNoiseForLandscapeAddition(float freq = (float)0.0015)
+        public INoise GetCellularNoiseForLandscapeAddition(float freq = (float)0.0015)
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
@@ -19,10 +19,10 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetCellularJitter((float)0.45);
             myNoise.SetFrequency(freq);
             myNoise.SetGradientPerturbAmp((float)30.0);
-            return myNoise;
+            return new GeneralNoise(myNoise);
         }
 
-        public FastNoise GetCellularNoiseForLandscape(float freq = (float)0.0015)
+        public INoise GetCellularNoiseForLandscape(float freq = (float)0.0015)
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
@@ -31,23 +31,42 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetCellularJitter((float)0.45);
             myNoise.SetFrequency(freq);
             myNoise.SetGradientPerturbAmp((float)30.0);
-            
-            return myNoise;
+
+            return new GeneralNoise(myNoise);
         }
 
-        public FastNoise GetCellularNoiseForRockFeatures(float freq = (float)0.04)
+        public INoise GetCellularNoiseForMaze(float freq = (float)0.03)
+        {
+            var myNoise = new FastNoise();
+            myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
+            myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Manhattan);
+            myNoise.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Div);
+            myNoise.SetCellularJitter((float)0.45);
+            myNoise.SetFrequency(freq);
+            
+            return new GeneralNoise(myNoise);
+        }
+
+        public INoise GetFeatureRockNoise(float featurefrequency, float featureSizeFrequency)
+        {
+            return new FeatureNoise(
+                GetCellularNoiseForLandscapeAddition(featurefrequency), 
+                GetCellularNoiseForRockFeatures(featureSizeFrequency));
+        }
+
+        public INoise GetCellularNoiseForRockFeatures(float freq = (float)0.04)
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
             myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Natural);
             myNoise.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Sub);
             myNoise.SetCellularJitter((float)0.45);
-            myNoise.SetFrequency(freq);            
-            return myNoise;
+            myNoise.SetFrequency(freq);
+            return new GeneralNoise(myNoise);
         }
 
 
-        public FastNoise GetValueFractalForRivers()
+        public INoise GetValueFractalForRivers()
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.ValueFractal);
@@ -57,11 +76,11 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetFractalOctaves(1);
             myNoise.SetFractalLacunarity((float)1.0);
             myNoise.SetFrequency((float).001);
-            return myNoise;
+            return new GeneralNoise(myNoise);
         }
 
 
-        public FastNoise GetValueFractalForDesertLandscape()
+        public INoise GetValueFractalForDesertLandscape()
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.ValueFractal);
@@ -71,27 +90,27 @@ namespace _7DaysToDie.Model.Noise
             myNoise.SetFractalOctaves(1);
             myNoise.SetFractalLacunarity((float)1.0);
             myNoise.SetFrequency((float).005);
-            return myNoise;
+            return new GeneralNoise(myNoise);
         }
 
-        public FastNoise GetCellularNoiseForRoads()
+        public INoise GetCellularNoiseForRoads()
         {
             var myNoise = new FastNoise();
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
             myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Euclidean);
             myNoise.SetCellularReturnType(FastNoise.CellularReturnType.Distance2Div);
             myNoise.SetFrequency((float).0015);
-            return myNoise;
+            return new GeneralNoise(myNoise);
         }
         
-        public FastNoise GetCellularNoiseForBiome(float frequency)
+        public INoise GetCellularNoiseForBiome(float frequency)
         {            
             var myNoise = new FastNoise(_random.Next());
             myNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
             myNoise.SetCellularDistanceFunction(FastNoise.CellularDistanceFunction.Natural);
             myNoise.SetCellularReturnType(FastNoise.CellularReturnType.CellValue);            
             myNoise.SetFrequency(frequency);
-            return myNoise;
+            return new GeneralNoise(myNoise);
         }
         
     }

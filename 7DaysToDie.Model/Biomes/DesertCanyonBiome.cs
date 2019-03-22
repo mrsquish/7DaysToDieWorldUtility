@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using FreeImageAPI;
@@ -13,70 +14,83 @@ namespace _7DaysToDie.Model.Biomes
 {
     public class DesertCanyonBiome : BiomeBase
     {
-        private float _canyonFactor = 50;
-        private float _riverFactor = 15;
+        
+        private float _canyonFactor;
+        private float _riverFactor;
+        private float riverLoweringFactor;
+        private float _baseLevel;
+
+        private readonly INoise _featureRockNoise;
+        private readonly INoise _generalLandscapeNoise;
+        private readonly INoise _cellNoise;
 
         public DesertCanyonBiome(string baseDirectory, int size, NoiseFactory noiseFactory) 
             : base(Path.Combine(baseDirectory, nameof(DesertCanyonBiome)), 
                 Biome.DesertColor, size, noiseFactory)
         {
-
+            _featureRockNoise = noiseFactory.GetFeatureRockNoise((float)0.06, (float)0.1);
+            _generalLandscapeNoise = noiseFactory.GetValueFractalForDesertLandscape();
+            _cellNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015);
         }
 
         public override void Generate()
         {
-            using (var heightMap = new PngImageSquare(Size))
+            using (var heightMap = new GreyScalePNG(Size))
             {
+                SetLevels();
                 heightMap.Create();
+                //heightMap.GenerateDummy16bitImage(Path.Combine(BaseDirectory, "dtm.png"));
                 RegenerateHeightMap(heightMap);
                 heightMap.Save(Path.Combine(BaseDirectory, "dtm.png"));
-            }
-            
+            }            
         }
 
-        public void RegenerateHeightMap(PngImageSquare heightMap)
+        private void SetLevels()
         {
-            var noiseFactory = new NoiseFactory();
-            var featureRockNoise = new FeatureRockNoise(noiseFactory, 5);
-            var myNoise = noiseFactory.GetValueFractalForDesertLandscape();
-            var cellNoise = noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015);
-            for (int i = 0; i < Size; i++)
+            _baseLevel = ((float)ushort.MaxValue / 8);
+            _generalLandscapeNoise.Amplitude = (float)ushort.MaxValue - ((float)ushort.MaxValue/3);
+            _cellNoise.Amplitude = (float)ushort.MaxValue / 20;
+            _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;
+            _riverFactor = _baseLevel + _generalLandscapeNoise.Amplitude / (float)15;
+            _canyonFactor = _baseLevel + _generalLandscapeNoise.Amplitude 
+                            - _generalLandscapeNoise.Amplitude / (float)1.5;
+            riverLoweringFactor = (float)0.1;            
+        }
+
+        public void RegenerateHeightMap(GreyScalePNG heightMap)
+        {            
+            for (int y = 0; y < Size; y++)
             {
-                var scanline = heightMap.GetImageLine(i);
-                var rgbt = scanline.Data;
-                for (int j = 0; j < rgbt.Length; j++)
+                for (int x = 0; x < Size; x++)
                 {
-                    var noise = myNoise.GetNoise(i, j);
-                    var levelAdd = cellNoise.GetNoise(i, j);
-
-                    var grey = GetStandardisedHeight(noise, 50) + 10;
-
-                    if (grey < _riverFactor)
-                    {
-                        grey = grey + (noise);
-
-                    }
-                    else if (grey > _canyonFactor)
-                    {
-                        grey += (levelAdd * 2 + 4) + featureRockNoise.GetNoise(i, j);
-                    }
-
-                    var greyValue = (grey);
-                    rgbt[j] = new FIRGBF(Color.Blue);
-                    /*
-                    rgbt[j].blue = (float)1;//greyValue;
-                    rgbt[j].green = (float)0;// greyValue;
-                    rgbt[j].red = (float)0;//greyValue;
-                    rgbt[j].alpha = (float)1;*/
+                    heightMap.SetPixel(x, y, GetPixelShade(x, y));                    
                 }
-                _logger.Info($"Writing Line {i}");
-                scanline.Data = rgbt;
+                _logger.Info($"Writing Line {y}");                
             }
         }
-
-        public float GetStandardisedHeight(float noise, float maxHeight)
+        
+        private ushort GetPixelShade(int x, int y)
         {
-            return (noise * (maxHeight / 2) + maxHeight);
+            float level = _baseLevel + _generalLandscapeNoise.GetNoise(x, y);
+            
+            if (level < _riverFactor)
+            {
+                level = level - (level * riverLoweringFactor); 
+            }
+            else if (level > _canyonFactor)
+            {
+                level = level  + _cellNoise.GetNoise(x, y)
+                            + _featureRockNoise.GetNoise(x, y);             
+            }
+            else
+            {
+                //_logger.Info("Normal");
+            }
+
+            return level < 0 ? (ushort) 0 : (ushort) level;
         }
+
+        
+        
     }
 }

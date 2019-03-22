@@ -16,7 +16,7 @@ namespace _7DaysToDie.Model.Biomes
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();        
         private readonly Color _baseColor;
         private readonly NoiseFactory _noiseFactory;
-        
+
         protected BiomeBase(
             string baseDirectory, 
             Color baseColor,

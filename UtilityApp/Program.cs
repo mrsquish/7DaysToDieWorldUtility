@@ -53,13 +53,13 @@ namespace _7DaysToDieWorldUtil
                 //world.SaveHeightMapPng();
                 
             } */
-            Console.Read();
+            //Console.Read();
         }
 
         public static void HeightMapTest()
         {
-            using (var biome = new DesertCanyonBiome(TestingPath, 1096, new NoiseFactory()))
-            {
+            using (var biome = new NastyBiome(TestingPath, 1024, new NoiseFactory()))
+            {                
                 biome.Generate();
             }
         }
