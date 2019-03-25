@@ -13,45 +13,55 @@ namespace _7DaysToDie.Model
         /// This is the function that loads the dtm.raw file.
         /// </summary>
         /// <param name="_filePath"></param>
-        /// <param name="w"></param>
+        /// <param name="width"></param>
         /// <param name="h"></param>
         /// <param name="_fac"></param>
         /// <param name="_clampHeight"></param>
         /// <returns></returns>
         public static ushort[] LoadHeightMapRAW(
             string _filePath,
-            int w,
-            int h,
+            int width,
+            int height,
             float _fac = 1f,
             float _clampHeight = 1f)
         {
             using (BufferedStream bufferedStream = new BufferedStream((Stream)File.OpenRead(_filePath)))
             {
                 _clampHeight *= 256f;
+
                 byte[] buffer = new byte[8192];
-                ushort[] numArray = new ushort[w * h];
+
+                ushort[] numArray = new ushort[width * height];
+
                 int num1 = 0;
                 int num2 = 0;
-                int num3 = 0;
-                while ((long)num3 < bufferedStream.Length)
+                int totalNumberOfBytesRead = 0;
+
+                while ((long)totalNumberOfBytesRead < bufferedStream.Length)
                 {
-                    int num4 = bufferedStream.Read(buffer, 0, buffer.Length);
-                    num3 += num4;
+                    var numberofBytesRead = bufferedStream.Read(buffer, 0, buffer.Length);
+                    totalNumberOfBytesRead += numberofBytesRead;
+
                     int index = 0;
-                    int num5 = num1 + num2 * w;
-                    for (; index < num4; index += 2)
+                    int bitMapIndex = num1 + num2 * width;
+
+                    for (; index < numberofBytesRead; index += 2)
                     {
                         byte num6 = buffer[index];
-                        ushort num7 = (ushort)((uint)buffer[index + 1] * 256U + (uint)num6);
-                        if ((double)_clampHeight > 0.0 && (double)num7 > (double)_clampHeight)
-                            num7 = (ushort)_clampHeight;
-                        numArray[num5++] = num7;
+
+                        ushort mapHeight = (ushort)((uint)buffer[index + 1] * 256U + (uint)num6);
+
+                        if ((double)_clampHeight > 0.0 && (double)mapHeight > (double)_clampHeight)
+                            mapHeight = (ushort)_clampHeight;
+
+                        numArray[bitMapIndex++] = mapHeight;
+
                         ++num1;
-                        if (num1 >= w)
+                        if (num1 >= width)
                         {
                             num1 = 0;
                             ++num2;
-                            num5 = num1 + num2 * w;
+                            bitMapIndex = num1 + num2 * width;
                         }
                     }
                 }

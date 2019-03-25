@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FreeImageAPI;
 using NLog;
+using File = System.IO.File;
 using PixelFormat = System.Windows.Media.PixelFormat;
 
 namespace _7DaysToDie.Model
@@ -34,7 +35,7 @@ namespace _7DaysToDie.Model
             _bitMap = new ushort[Size * Size];
         }
 
-        public void Save(string fileName)
+        public void SavePng(string fileName)
         {
             var rect = new Rectangle(0, 0, Size, Size);
             b16bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
@@ -49,10 +50,26 @@ namespace _7DaysToDie.Model
             SaveBmp(b16bpp, fileName);
         }
 
+        public void SaveRaw(string filename)
+        {            
+            using (BinaryWriter writer = new BinaryWriter(File.Create(filename)))            
+            {
+                for (int row = 0; row < Size; row++)
+                {
+                    for (int column = 0; column < Size; column++)
+                    {
+                        //BinaryWriter will write the value in little Endian. 
+                        var bitValue = _bitMap[row * Size + column];
+                        writer.Write(bitValue);                        
+                    }
+                }
+            }
+        }
+
         public void SetPixel(int x, int y, ushort shade)
         {
-            var i = ((y * Size) + x); // 16bpp
-            _bitMap[i] = shade;         // GRAY
+            var i = ((y * Size) + x);
+            _bitMap[i] = shade;      
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]

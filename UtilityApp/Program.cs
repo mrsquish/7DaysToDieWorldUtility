@@ -16,8 +16,13 @@ using _7DaysToDie.Model.Noise;
 
 namespace _7DaysToDieWorldUtil
 {
+    /// Biome Ideas :
+    /// Swamp - this could be used in "green" or "wasteland" or "burnt"
+
+
+
     // Implement this : https://github.com/Auburns/FastNoise_CSharp
-    //http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
+    // Gausian Blur if needed : http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
     class Program
     {
         public static string TestingPath;

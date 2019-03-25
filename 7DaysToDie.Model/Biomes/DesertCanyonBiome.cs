@@ -42,7 +42,7 @@ namespace _7DaysToDie.Model.Biomes
                 heightMap.Create();
                 //heightMap.GenerateDummy16bitImage(Path.Combine(BaseDirectory, "dtm.png"));
                 RegenerateHeightMap(heightMap);
-                heightMap.Save(Path.Combine(BaseDirectory, "dtm.png"));
+                heightMap.SavePng(Path.Combine(BaseDirectory, "dtm.png"));
             }            
         }
 
