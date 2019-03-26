@@ -19,88 +19,78 @@ namespace _7DaysToDie.Model
     public class PngImageSquare : IDisposable
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();
-        protected FIBITMAP _bitMap;
-        private bool _bitMapAllocated = false;
 
+        public ushort[] _bitMap;
+        private byte[] _bytes;
+
+        private Bitmap _bitmap2;
+        
         public PngImageSquare(int size)
         {
             Size = size;
+            _bytes = new byte[Size * Size * 2];
+        }
+
+        public int Size { get; }
+
+        public void Dispose()
+        {
+        }
+
+        public static void TestPng()
+        {
+            var bitmap = new byte[10 * 10 * 2];
+            bitmap[0] = 255;
+            bitmap[4] = 255;
+            bitmap[8] = 255;
+            using (Image image = Image.FromStream(new MemoryStream(bitmap)))
+            {
+                image.Save("output.jpg", ImageFormat.Jpeg);  // Or Png
+            }
+
         }
 
         public void Create()
         {
-            _bitMap = FreeImage.AllocateT(FREE_IMAGE_TYPE.FIT_RGB16, Size, Size, 48);
+
+            Bitmap cur = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
+            BitmapData curBitmapData = cur.LockBits(new Rectangle(0, 0, Size, Size),
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
+            Int32 stride = curBitmapData.Stride;
+            Byte[] data = new Byte[stride * cur.Height];
+            _bytes = new Byte[stride * cur.Height];
+
+            Marshal.Copy(curBitmapData.Scan0, data, 0, data.Length);
+            cur.UnlockBits(curBitmapData);
+
+            _bitMap = new ushort[Size * Size];
+
+            //_bitmap2 = new Bitmap(Size,Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
         }
 
-        public IntPtr GetScanLine(int lineNumber)
+        public void SavePng(string fileName)
         {
-            return FreeImage.GetScanLine(_bitMap, lineNumber);
+            var rect = new Rectangle(0, 0, Size, Size);
+            var b16bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
+            var bitmapData = b16bpp.LockBits(rect, ImageLockMode.WriteOnly, b16bpp.PixelFormat);
+            
+            // Copy the randomized bits to the bitmap pointer.
+            var ptr = bitmapData.Scan0;
+            Copy(_bitMap, ptr, 0, _bitMap.Length);
+
+            // Unlock the bitmap, we're all done.
+            b16bpp.UnlockBits(bitmapData);
+            SaveBmp(b16bpp, fileName);
         }
 
-        public Scanline<FIRGBAF> GetImageLine(int lineNumber)
-        {            
-            return new Scanline<FIRGBAF>(_bitMap, lineNumber);
-        }
-
-        public FIRGBAF GetColor(Color color)
+        public void SetPixel(int x, int y, Color color)
         {
-            return new FIRGBAF(color);
-        }
-
-        public void Save(string fileName)
-        {
-            var result = FreeImage.SaveEx(ref _bitMap, fileName, 
-                FREE_IMAGE_FORMAT.FIF_PNG,
-                FREE_IMAGE_SAVE_FLAGS.PNG_Z_DEFAULT_COMPRESSION, 
-                FREE_IMAGE_COLOR_DEPTH.FICD_FORCE_GREYSCALE, false);
-            if (!result)
-            {
-                _logger.Error($"Saving {fileName} failed.");
-            }
-        }
-
-        public int Size { get; private set; }
-
-        public void Dispose()
-        {
-            if (_bitMapAllocated)
-                FreeImage.UnloadEx(ref _bitMap);
-        }
-
-        public  static void SaveBmp(Bitmap bmp, string path)
-        {
-            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-
-            BitmapData bitmapData = bmp.LockBits(rect, ImageLockMode.ReadOnly, bmp.PixelFormat);
-
-            var pixelFormats = ConvertBmpPixelFormat(bmp.PixelFormat);
-
-            BitmapSource source = BitmapSource.Create(bmp.Width,
-                                                      bmp.Height,
-                                                      bmp.HorizontalResolution,
-                                                      bmp.VerticalResolution,
-                                                      pixelFormats,
-                                                      null,
-                                                      bitmapData.Scan0,
-                                                      bitmapData.Stride * bmp.Height,
-                                                      bitmapData.Stride);
-
-            bmp.UnlockBits(bitmapData);
-
-
-            FileStream stream = new FileStream(path, FileMode.Create);
-
-            TiffBitmapEncoder encoder = new TiffBitmapEncoder();
-
-            encoder.Compression = TiffCompressOption.Zip;
-            encoder.Frames.Add(BitmapFrame.Create(source));
-            encoder.Save(stream);
-
-            stream.Close();
+            var i = ((y * Size) + x);
+            
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]
-        static extern void CopyMemory(IntPtr destination, IntPtr source, UIntPtr length);
+        private static extern void CopyMemory(IntPtr destination, IntPtr source, UIntPtr length);
 
         public static void Copy<T>(T[] source, IntPtr destination, int startIndex, int length)
             where T : struct
@@ -119,46 +109,40 @@ namespace _7DaysToDie.Model
             }
         }
 
-        private Bitmap b16bpp;
-        public void GenerateDummy16bitImage(string fileName)
+        public static void SaveBmp(Bitmap bmp, string path)
         {
-            b16bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
-            // Calculate the number of bytes required and allocate them.            
-            var bitmapBytes = new ushort[Size * Size];
-            // Fill the bitmap bytes with random data.
-            var random = new Random();
-            for (int x = 0; x < Size; x++)
-            {
-                for (int y = 0; y < Size; y++)
-                {
+            var bitmapData = bmp.LockBits(rect, ImageLockMode.ReadOnly, bmp.PixelFormat);
 
-                    var i = ((y * Size) + x); // 16bpp
+            var pixelFormats = ConvertBmpPixelFormat(bmp.PixelFormat);
 
-                    // Generate the next random pixel color value.
-                    var value = (ushort)ushort.MaxValue;
+            var source = BitmapSource.Create(bmp.Width,
+                bmp.Height,
+                bmp.HorizontalResolution,
+                bmp.VerticalResolution,
+                pixelFormats,
+                null,
+                bitmapData.Scan0,
+                bitmapData.Stride * bmp.Height,
+                bitmapData.Stride);
 
-                    bitmapBytes[i] = value;         // GRAY
-                }
-            }
+            bmp.UnlockBits(bitmapData);
 
-            var rect = new Rectangle(0, 0, Size, Size);
-            var bitmapData = b16bpp.LockBits(rect, ImageLockMode.WriteOnly, b16bpp.PixelFormat);
-            // Copy the randomized bits to the bitmap pointer.
-            var ptr = bitmapData.Scan0;
-            Copy(bitmapBytes, ptr, 0, bitmapBytes.Length);
-            //Marshal.Copy(bitmapBytes, 0, ptr, bitmapBytes.Length);
 
-            // Unlock the bitmap, we're all done.
-            b16bpp.UnlockBits(bitmapData);
-            SaveBmp(b16bpp, fileName);
-            
-            _logger.Info("GenerateDummy16bitImage - saved");
+            var stream = new FileStream(path, FileMode.Create);
+            var encoder = new PngBitmapEncoder() { };
+            //var encoder = new TiffBitmapEncoder {Compression = TiffCompressOption.Zip};
+
+            encoder.Frames.Add(BitmapFrame.Create(source));
+            encoder.Save(stream);
+
+            stream.Close();
         }
 
         private static System.Windows.Media.PixelFormat ConvertBmpPixelFormat(System.Drawing.Imaging.PixelFormat pixelformat)
         {
-            System.Windows.Media.PixelFormat pixelFormats = System.Windows.Media.PixelFormats.Default;
+            var pixelFormats = PixelFormats.Default;
 
             switch (pixelformat)
             {

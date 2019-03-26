@@ -7,15 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using _7DaysToDie.Model.Contracts;
 using _7DaysToDie.Model.Noise;
 
 namespace _7DaysToDie.Model.Biomes
 {
-    public abstract class BiomeBase : IDisposable
+    public abstract class BiomeBase : IBiome
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();        
         private readonly Color _baseColor;
         private readonly NoiseFactory _noiseFactory;
+        private PngImageSquare _biomePng;
 
         protected BiomeBase(
             string baseDirectory, 
@@ -31,8 +33,10 @@ namespace _7DaysToDie.Model.Biomes
                 Directory.CreateDirectory(BaseDirectory);
         }
         
-        protected int Size { get; set; }
-        protected string BaseDirectory { get; private set; }
+        public int Size { get; protected set; }
+        public string BaseDirectory { get; protected set; }
+
+
 
         public abstract void Generate();
         

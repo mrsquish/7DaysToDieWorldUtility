@@ -11,6 +11,8 @@ namespace _7DaysToDie.Model.Noise
         float GetNoise(float x, float y);
         float Amplitude { get; set; }
 
+        bool Invert { get; set; }
+
         float LastNoise { get; }
     }
 }

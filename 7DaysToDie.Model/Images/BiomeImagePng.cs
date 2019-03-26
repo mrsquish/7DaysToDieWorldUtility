@@ -21,7 +21,7 @@ namespace _7DaysToDie.Model.Images
         public Biomes(int size) : base(size)
         {
         }
-
+        /*
         public void GenerateBiomes2()
         {
             var myNoise = new FastNoise(46549874);
@@ -60,7 +60,7 @@ namespace _7DaysToDie.Model.Images
                 scanline.Data = rgbt;
             }
         }
-
+        
 
         public void GenerateBiomes()
         {
@@ -81,7 +81,7 @@ namespace _7DaysToDie.Model.Images
                 scanline.Data = rgbt;
             }            
         }
-
+        */
         private Color GetBiomeFromNoise(float noise)
         {
             if (noise < _wasteLandPeak)

@@ -27,8 +27,14 @@ namespace _7DaysToDieWorldUtil
     {
         public static string TestingPath;
 
+        
+
         static void Main(string[] args)
         {
+            /*
+            PngImageSquare.TestPng();
+            return;
+            */
             if (Directory.Exists("C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing"))
                 TestingPath = "C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing";
             else
@@ -44,46 +50,22 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
-            //BiomeTest();
             HeightMapTest();
 
-            //@"D:\Program Files (x86)\Steam\SteamApps\common\7 Days To Die\Data\Worlds\Testing4k
-            //
-            /*
-            using (var world = World.LoadWorldPath(@"C:\Users\ahardy\Documents\HeightMaps"))
-            {
-                world.GenerateBiomes();
-                //world.RegenerateHeightMap();
-                //world.LevelAllPrefabsAtGroundHeight();
-                //world.SaveHeightMapPng();
-                
-            } */
-            //Console.Read();
         }
 
         public static void HeightMapTest()
         {
-            using (var biome = new NastyBiome(TestingPath, 4096, new NoiseFactory()))
+            using (var biome = new TestBiome(TestingPath, 4096, new NoiseFactory()))
             {                
                 biome.Generate();
-            }
-        }
-
-        public static void BiomeTest()
-        {
-            using (var biomes = new Biomes(4096))
-            {
-                biomes.Create();
-                biomes.GenerateBiomes();
-                biomes.Save(Path.Combine(TestingPath, "Biomes.png"));
             }
         }
 
         public static void AdjustPrefabHeight()
         {
             using (var world = World.LoadWorldPath(TestingPath))
-            {
-                world.HeightMapPNG = Path.Combine(TestingPath, "dtm.png");
+            {                
                 world.LevelAllPrefabsAtGroundHeight();
                 world.Prefabs.Save();
             }

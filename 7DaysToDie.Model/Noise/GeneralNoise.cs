@@ -20,7 +20,7 @@ namespace _7DaysToDie.Model.Noise
 
         public override float LastNoise => _lastNoise;
 
-        public bool Invert
+        public override bool Invert
         {
             get => _invert==-1;
             set => _invert = value? -1 : 1;

@@ -60,8 +60,10 @@
   <ItemGroup>
     <Compile Include="Base\GreyScalePng.cs" />
     <Compile Include="Biomes\Base\BiomeBase.cs" />
+    <Compile Include="Biomes\TestBiome.cs" />
     <Compile Include="Biomes\DesertCanyonBiome.cs" />
     <Compile Include="Biomes\NastyBiome.cs" />
+    <Compile Include="Contracts\IBiome.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />

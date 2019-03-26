@@ -13,7 +13,7 @@ using _7DaysToDie.Model.Noise;
 
 namespace _7DaysToDie.Model.Biomes
 {
-    public class DesertCanyonBiome : BiomeBase
+    public class TestBiome : BiomeBase
     {
         
         private float _canyonFactor;
@@ -23,17 +23,22 @@ namespace _7DaysToDie.Model.Biomes
         private float _cellNoiseMultiplier;
 
         private readonly INoise _featureRockNoise;
-        private readonly INoise _generalLandscapeNoise;
+        private readonly INoise _swampPathNoise;
+        private readonly INoise _swampFillerNoise;
         private readonly INoise _generalRollingBaseNoise;
         private readonly INoise _cellNoise;
 
-        public DesertCanyonBiome(string baseDirectory, int size, NoiseFactory noiseFactory) 
-            : base(Path.Combine(baseDirectory, nameof(DesertCanyonBiome)), 
+        public TestBiome(string baseDirectory, int size, NoiseFactory noiseFactory) 
+            : base(Path.Combine(baseDirectory, nameof(TestBiome)), 
                 Biome.DesertColor, size, noiseFactory)
         {
-            _featureRockNoise = noiseFactory.GetFeatureRockNoise((float)0.06, (float)0.1);
+            
             _generalRollingBaseNoise = noiseFactory.GetRollingBaseLandscape((float)0.003);
-            _generalLandscapeNoise = noiseFactory.GetPerlinFractalBillow((float)0.002);
+            _swampPathNoise = noiseFactory.GetPerlinFractalBillow((float) 0.02);
+            _swampFillerNoise = noiseFactory.GetPerlinHermite((float)0.04);
+            _swampPathNoise.Invert = true;
+
+            _featureRockNoise = noiseFactory.GetFeatureRockNoise((float)0.06, (float)0.1);
             _cellNoise = noiseFactory.GetRollingBaseLandscape((float)0.05); //noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015);
         }
 
@@ -52,17 +57,18 @@ namespace _7DaysToDie.Model.Biomes
 
         private void SetLevels()
         {
+            
             _baseLevel = ((float)ushort.MaxValue / 10);
             _generalRollingBaseNoise.Amplitude = ((float)ushort.MaxValue / 6);
-            _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue / 3);
+            _swampPathNoise.Amplitude = ((float)ushort.MaxValue/ 20);
 
-            _cellNoise.Amplitude = (float)8;
-            _cellNoiseMultiplier = (float)ushort.MaxValue / 30;
+            _cellNoise.Amplitude = (float) 8;// (float)ushort.MaxValue / 20;
+            _cellNoiseMultiplier = (float) ushort.MaxValue / 30;
 
             _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;
-            _riverFactor = _generalLandscapeNoise.Amplitude / (float)15;
-            _canyonFactor = _generalLandscapeNoise.Amplitude - _generalLandscapeNoise.Amplitude / (float)1.5;
-            riverLoweringFactor = (float)0.01;
+            _riverFactor = _swampPathNoise.Amplitude / (float)15;
+            _canyonFactor = _swampPathNoise.Amplitude - _swampPathNoise.Amplitude / (float)1.5;
+            riverLoweringFactor = (float)0.01;            
         }
 
         public void RegenerateHeightMap(GreyScalePNG heightMap)
@@ -80,25 +86,29 @@ namespace _7DaysToDie.Model.Biomes
         private ushort GetPixelShade(int x, int y)
         {
             float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
-            float level = _generalLandscapeNoise.GetNoise(x, y);
+            float level = _swampPathNoise.GetNoise(x, y);
 
+            level = _baseLevel + (float)(Math.Round((double)level / 1200) * 1200);
+            /*
             if (level < _riverFactor)
             {
-                level = _baseLevel + baseLandscape + level - (level * riverLoweringFactor);
+                level = _baseLevel + baseLandscape + level - (level * riverLoweringFactor); 
             }
             else if (level > _canyonFactor)
             {
                 level = _baseLevel + baseLandscape + level;
-                var step = (float)(Math.Round((double)level / 3200) * 3200);
+                var step = (float) (Math.Round((double) level / 3200) * 3200);
                 if (step < level) step = level;
-                level = step + _featureRockNoise.GetNoise(x, y);
+                //level = _baseLevel + step;
+                //level = (_cellNoise.GetNoise(x, y) * _cellNoiseMultiplier);              (_cellNoise.GetNoise(x, y) * _cellNoiseMultiplier);//
+                level = step + _featureRockNoise.GetNoise(x, y);             
             }
             else
             {
                 level = _baseLevel + baseLandscape + level;
-            }
+            }*/
 
-            return level < 0 ? (ushort)0 : (ushort)level;
+            return level < 0 ? (ushort) 0 : (ushort) level;
         }
 
         

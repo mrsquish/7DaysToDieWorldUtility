@@ -29,6 +29,16 @@ namespace _7DaysToDie.Model.Noise
             set => _featureNoise.Amplitude = value;
         }
 
+        public override bool Invert
+        {
+            get => _placementRandomiserNoise.Invert;
+            set
+            {
+                _placementRandomiserNoise.Invert = value;
+                _featureNoise.Invert = value;
+            }
+        }
+
         public override float LastNoise => _lastNoise;
 
         public override float GetNoise(float x, float y)
