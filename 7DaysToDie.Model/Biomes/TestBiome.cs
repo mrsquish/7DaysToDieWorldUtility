@@ -17,10 +17,9 @@ namespace _7DaysToDie.Model.Biomes
     {
         
         private float _canyonFactor;
-        private float _riverFactor;
-        private float riverLoweringFactor;
-        private float _baseLevel;
+        private float _pathLevel;                
         private float _cellNoiseMultiplier;
+        private float _stepFactor;
 
         private readonly INoise _featureRockNoise;
         private readonly INoise _swampPathNoise;
@@ -57,18 +56,20 @@ namespace _7DaysToDie.Model.Biomes
 
         private void SetLevels()
         {
-            
-            _baseLevel = ((float)ushort.MaxValue / 10);
+            _stepFactor = 1200;
+            _swampPathNoise.Amplitude = ((float)ushort.MaxValue / 20);
+            _swampFillerNoise.Amplitude = _stepFactor;
+            _pathLevel = _swampPathNoise.Amplitude - _stepFactor;
+
             _generalRollingBaseNoise.Amplitude = ((float)ushort.MaxValue / 6);
-            _swampPathNoise.Amplitude = ((float)ushort.MaxValue/ 20);
 
             _cellNoise.Amplitude = (float) 8;// (float)ushort.MaxValue / 20;
             _cellNoiseMultiplier = (float) ushort.MaxValue / 30;
 
             _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;
-            _riverFactor = _swampPathNoise.Amplitude / (float)15;
+            
             _canyonFactor = _swampPathNoise.Amplitude - _swampPathNoise.Amplitude / (float)1.5;
-            riverLoweringFactor = (float)0.01;            
+            
         }
 
         public void RegenerateHeightMap(GreyScalePNG heightMap)
@@ -85,15 +86,16 @@ namespace _7DaysToDie.Model.Biomes
         
         private ushort GetPixelShade(int x, int y)
         {
-            float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
+            //float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
             float level = _swampPathNoise.GetNoise(x, y);
 
-            level = _baseLevel + (float)(Math.Round((double)level / 1200) * 1200);
-            /*
-            if (level < _riverFactor)
+            level = SeaLevel + (float)(Math.Round((double)level / _stepFactor) * _stepFactor);
+            
+            if (level < _pathLevel)
             {
-                level = _baseLevel + baseLandscape + level - (level * riverLoweringFactor); 
+                level = _pathLevel - _swampFillerNoise.Amplitude + _swampFillerNoise.GetNoise(x, y);
             }
+            /*
             else if (level > _canyonFactor)
             {
                 level = _baseLevel + baseLandscape + level;
@@ -106,8 +108,8 @@ namespace _7DaysToDie.Model.Biomes
             else
             {
                 level = _baseLevel + baseLandscape + level;
-            }*/
-
+            }
+            */
             return level < 0 ? (ushort) 0 : (ushort) level;
         }
 

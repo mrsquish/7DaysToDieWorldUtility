@@ -19,6 +19,8 @@ namespace _7DaysToDieWorldUtil
     /// Biome Ideas :
     /// Swamp - this could be used in "green" or "wasteland" or "burnt"
 
+    ///Good Erosion explanation and source code(CPP)
+    ///http://ranmantaru.com/blog/2011/10/08/water-erosion-on-heightmap-terrain/
 
 
     // Implement this : https://github.com/Auburns/FastNoise_CSharp
