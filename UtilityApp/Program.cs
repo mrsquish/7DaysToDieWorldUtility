@@ -22,6 +22,9 @@ namespace _7DaysToDieWorldUtil
     ///Good Erosion explanation and source code(CPP)
     ///http://ranmantaru.com/blog/2011/10/08/water-erosion-on-heightmap-terrain/
 
+    ///https://github.com/SebLague/Hydraulic-Erosion
+    ///
+    /// https://firespark.de/?id=article&article=ProceduralGenerationResources
 
     // Implement this : https://github.com/Auburns/FastNoise_CSharp
     // Gausian Blur if needed : http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html

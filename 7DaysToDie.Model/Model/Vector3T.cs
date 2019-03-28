@@ -8,7 +8,8 @@ namespace _7DaysToDie.Model
 {
     public class Vector3<T>
     {
-        public Vector3() {
+        public Vector3()
+        {
         }
 
         public Vector3(T x, T y, T z)

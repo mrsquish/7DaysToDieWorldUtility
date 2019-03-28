@@ -7,8 +7,8 @@
     <ProjectGuid>{71A4A45D-2C64-4769-B2CC-45AE10F72946}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>_7DaysToDie.Model</RootNamespace>
-    <AssemblyName>7DaysToDie.Model</AssemblyName>
+    <RootNamespace>_7DaysToDie</RootNamespace>
+    <AssemblyName>7DaysToDie</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -65,9 +65,15 @@
     <Compile Include="Biomes\NastyBiome.cs" />
     <Compile Include="Contracts\IBiome.cs" />
     <Compile Include="Decoration.cs" />
+    <Compile Include="Erosion\Erosion.cs" />
+    <Compile Include="Erosion\ErosionParameters.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
     <Compile Include="Images\BiomeImagePng.cs" />
+    <Compile Include="Model\HeightMap.cs" />
+    <Compile Include="Model\Point2.cs" />
+    <Compile Include="Model\Vector2Int.cs" />
+    <Compile Include="Model\Vector2T.cs" />
     <Compile Include="Noise\FastNoise.cs" />
     <Compile Include="Noise\FeatureRockNoise.cs" />
     <Compile Include="Noise\GeneralNoise.cs" />
@@ -78,8 +84,8 @@
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TFPCodeReference.cs" />
-    <Compile Include="Vector3T.cs" />
-    <Compile Include="VectorInt.cs" />
+    <Compile Include="Model\Vector3T.cs" />
+    <Compile Include="Model\Vector3.cs" />
     <Compile Include="World.cs" />
     <Compile Include="WorldSize.cs" />
   </ItemGroup>
