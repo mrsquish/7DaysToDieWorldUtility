@@ -66,6 +66,7 @@
     <Compile Include="Contracts\IBiome.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Erosion\Erosion.cs" />
+    <Compile Include="Erosion\ErosionMine.cs" />
     <Compile Include="Erosion\ErosionParameters.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
