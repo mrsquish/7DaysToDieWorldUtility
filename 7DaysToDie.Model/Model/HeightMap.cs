@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace _7DaysToDie.Model
 {
-    public struct HeightMap
+    public struct HeightMap2
     {
         private int _size;
         private ushort[] _heightMap;        
 
-        public HeightMap(int size)
+        public HeightMap2(int size)
         {
             _size = size;
             _heightMap = new ushort[size * size];

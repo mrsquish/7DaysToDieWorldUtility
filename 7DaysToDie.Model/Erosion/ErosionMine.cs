@@ -7,10 +7,10 @@ namespace _7DaysToDie.Erosion
 {
     public class ErosionMine
     {
-        private readonly HeightMap _heightMap;
+        private readonly HeightMap2 _heightMap;
         private const int HMAP_SIZE = 4096;
 
-        public ErosionMine(HeightMap heightMap)
+        public ErosionMine(HeightMap2 heightMap)
         {
             _heightMap = heightMap;
         }

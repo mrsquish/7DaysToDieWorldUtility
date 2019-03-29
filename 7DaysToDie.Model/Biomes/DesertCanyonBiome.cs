@@ -39,14 +39,13 @@ namespace _7DaysToDie.Model.Biomes
 
         public override void Generate()
         {
-            using (var heightMap = new GreyScalePNG(Size))
+            using (var heightMap = new HeightMap(Size))
             {
                 SetLevels();
                 heightMap.Create();
-                //heightMap.GenerateDummy16bitImage(Path.Combine(BaseDirectory, "dtm.png"));
                 RegenerateHeightMap(heightMap);
-                heightMap.SavePng(Path.Combine(BaseDirectory, "dtm.png"));
-                heightMap.SaveRaw(Path.Combine(BaseDirectory, "dtm.raw"));
+
+                heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));                
             }            
         }
 
@@ -65,7 +64,7 @@ namespace _7DaysToDie.Model.Biomes
             riverLoweringFactor = (float)0.01;
         }
 
-        public void RegenerateHeightMap(GreyScalePNG heightMap)
+        public void RegenerateHeightMap(HeightMap heightMap)
         {            
             for (int y = 0; y < Size; y++)
             {
@@ -77,7 +76,7 @@ namespace _7DaysToDie.Model.Biomes
             }
         }
         
-        private ushort GetPixelShade(int x, int y)
+        private float GetPixelShade(int x, int y)
         {
             float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
             float level = _generalLandscapeNoise.GetNoise(x, y);
@@ -98,7 +97,7 @@ namespace _7DaysToDie.Model.Biomes
                 level = _baseLevel + baseLandscape + level;
             }
 
-            return level < 0 ? (ushort)0 : (ushort)level;
+            return level < 0 ? 0 : level;
         }
 
         

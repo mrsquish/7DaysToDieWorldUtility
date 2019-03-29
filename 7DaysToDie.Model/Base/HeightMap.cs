@@ -12,18 +12,18 @@ using PixelFormat = System.Windows.Media.PixelFormat;
 
 namespace _7DaysToDie.Model
 {
-    public class GreyScalePNG : IDisposable
+    public class HeightMap : IDisposable
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();
 
-        private ushort[] _bitMap;
-        private Bitmap b16bpp;
+        //private ushort[] _bitMap;
+        public float[] Map;
 
-        public GreyScalePNG(int size)
+        public HeightMap(int size)
         {
             Size = size;
         }
-
+        
         public int Size { get; }
 
         public void Dispose()
@@ -32,26 +32,33 @@ namespace _7DaysToDie.Model
 
         public void Create()
         {
-            _bitMap = new ushort[Size * Size];
+            Map = new float[Size * Size];            
         }
 
-        public void SavePng(string fileName)
+        public void Save(string fileName)
+        {            
+            var bitMap = SaveRaw(Path.ChangeExtension(fileName, "raw"));
+            SavePng(Path.ChangeExtension(fileName, "png"), bitMap);
+        }
+
+        private void SavePng(string fileName, ushort[] bitMap)
         {
             var rect = new Rectangle(0, 0, Size, Size);
-            b16bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
-            var bitmapData = b16bpp.LockBits(rect, ImageLockMode.WriteOnly, b16bpp.PixelFormat);
+            var b16Bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            var bitmapData = b16Bpp.LockBits(rect, ImageLockMode.WriteOnly, b16Bpp.PixelFormat);
 
             // Copy the randomized bits to the bitmap pointer.
             var ptr = bitmapData.Scan0;
-            Copy(_bitMap, ptr, 0, _bitMap.Length);
+            Copy(bitMap, ptr, 0, bitMap.Length);
 
             // Unlock the bitmap, we're all done.
-            b16bpp.UnlockBits(bitmapData);
-            SaveBmp(b16bpp, fileName);
+            b16Bpp.UnlockBits(bitmapData);
+            SaveBmp(b16Bpp, fileName);
         }
 
-        public void SaveRaw(string filename)
-        {            
+        private ushort[] SaveRaw(string filename)
+        {
+            var bitMap = new ushort[Size * Size];
             using (BinaryWriter writer = new BinaryWriter(File.Create(filename)))            
             {
                 for (int row = 0; row < Size; row++)
@@ -59,17 +66,20 @@ namespace _7DaysToDie.Model
                     for (int column = 0; column < Size; column++)
                     {
                         //BinaryWriter will write the value in little Endian. 
-                        var bitValue = _bitMap[row * Size + column];
-                        writer.Write(bitValue);                        
+                        var output = (ushort) Map[row * Size + column];
+                        bitMap[row * Size + column] = output;                        
+                        writer.Write(output);                        
                     }
                 }
             }
+
+            return bitMap;
         }
 
-        public void SetPixel(int x, int y, ushort shade)
+        public void SetPixel(int x, int y, float shade)
         {
             var i = ((y * Size) + x);
-            _bitMap[i] = shade;      
+            Map[i] = shade;      
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]

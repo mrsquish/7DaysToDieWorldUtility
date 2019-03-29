@@ -23,7 +23,10 @@ namespace _7DaysToDie.Model.Noise
             get => _amplitude;
             set
             {
-                _amplitude = value;
+                if (value > ushort.MaxValue)
+                    _amplitude = ushort.MaxValue;
+                else _amplitude = value;
+
                 _middle = _amplitude / (float) 2;
             }
         }

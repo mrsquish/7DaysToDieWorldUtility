@@ -29,13 +29,12 @@ namespace _7DaysToDie.Model.Biomes
 
         public override void Generate()
         {
-            using (var heightMap = new GreyScalePNG(Size))
+            using (var heightMap = new HeightMap(Size))
             {
                 SetLevels();
                 heightMap.Create();                
-                RegenerateHeightMap(heightMap);
-                heightMap.SavePng(Path.Combine(BaseDirectory, "dtm.png"));
-                heightMap.SaveRaw(Path.Combine(BaseDirectory, "dtm.raw"));
+                RegenerateHeightMap(heightMap);                
+                heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));
             }
         }
 
@@ -51,7 +50,7 @@ namespace _7DaysToDie.Model.Biomes
             riverLoweringFactor = (float)0.1;
         }
 
-        public void RegenerateHeightMap(GreyScalePNG heightMap)
+        public void RegenerateHeightMap(HeightMap heightMap)
         {
             for (int y = 0; y < Size; y++)
             {

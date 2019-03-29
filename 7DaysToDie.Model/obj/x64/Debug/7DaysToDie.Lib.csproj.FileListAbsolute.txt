@@ -12,8 +12,6 @@ C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\obj
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Model.dll
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Model.pdb
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImage.dll
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\7DaysToDie.Model.dll
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\7DaysToDie.Model.pdb
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImageNET.dll
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\NLog.dll
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImageNET.pdb
@@ -22,8 +20,6 @@ C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7Da
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Lib.csprojAssemblyReference.cache
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Lib.csproj.CoreCompileInputs.cache
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Lib.csproj.CopyComplete
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Model.dll
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Model.pdb
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\Assembly-CSharp.dll
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\UnityEngine.CoreModule.dll
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\UnityEngine.PhysicsModule.dll
@@ -142,3 +138,7 @@ C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\UnityEngine.UnityWebRequestTextureModule.xml
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\UnityEngine.VideoModule.xml
 C:\Users\OWNER\source\repos\mrsquish\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\UnityEngine.XRModule.xml
+C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\7DaysToDie.dll
+C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\7DaysToDie.pdb
+C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.dll
+C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.pdb
