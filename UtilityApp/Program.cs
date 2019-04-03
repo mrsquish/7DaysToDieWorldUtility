@@ -9,6 +9,7 @@ using FreeImageAPI;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using _7DaysToDie.Maze;
 using _7DaysToDie.Model;
 using _7DaysToDie.Model.Biomes;
 using _7DaysToDie.Model.Images;
@@ -47,6 +48,9 @@ namespace _7DaysToDieWorldUtil
                 TestingPath = "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k";
             }
 
+            TestMaze();
+            return;
+
             ConfigureLoggingFramework();
             var logger = LogManager.GetCurrentClassLogger();
             // Check if FreeImage.dll is available (can be in %path%).
@@ -56,6 +60,14 @@ namespace _7DaysToDieWorldUtil
                 return;
             }
             HeightMapTest();
+
+        }
+
+        public static void TestMaze()
+        {
+            var maze = new Maze(64);
+            maze.GenerateRecursiveBackTracker();
+            maze.RenderToHeightMap(Path.Combine(TestingPath, "maze.raw"), 8);
 
         }
 

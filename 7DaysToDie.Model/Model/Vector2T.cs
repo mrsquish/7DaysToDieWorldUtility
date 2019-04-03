@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace _7DaysToDie.Model.Model
 {
-    public class Vector2<T>
+    public struct Vector2<T>
     {
-        public Vector2()
-        {
-        }
-
         public Vector2(T x, T z)
         {
             X = x;
