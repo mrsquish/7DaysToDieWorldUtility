@@ -17,7 +17,8 @@ namespace _7DaysToDie.Maze
         North = 1,        
         East = 2,
         South = 4,
-        West = 8
+        West = 8,
+        ReservedSpace = 16
     }
 
     public static class MazeExtensions
@@ -77,24 +78,70 @@ namespace _7DaysToDie.Maze
         public void GenerateRecursiveBackTracker()
         {
             InitialiseArray();
+            GenerateRandomBlockedRegions(10);
             var start = GetRandomStartingPoint();
             _logger.Info($"Starting At  [{start.X},{start.Z}]");
             GenerateRecursiveBackTracker(start);
-
+            OpenBlockedRegions();
         }
 
         private void GenerateRecursiveBackTracker(Vector2<int> currentPoint)
         {
             var validDirectionsToTravel = GetValidDirections(currentPoint);
+            _logger.Info($"Analysing Cell [{currentPoint.X},{currentPoint.Z}]");
             while (validDirectionsToTravel != ValidDirection.None)
             {                
                 var randomDirection = GetRandomDirection(validDirectionsToTravel);
                 var neighbor = currentPoint.NeighborInDirection(randomDirection);
                 RemoveWall(randomDirection, currentPoint);
                 RemoveWall(randomDirection.Reverse(), neighbor);
-                GenerateRecursiveBackTracker(neighbor);
-                _logger.Info($"Backtracking from Cell [{currentPoint.X},{currentPoint.Z}]");
+                GenerateRecursiveBackTracker(neighbor);                
                 validDirectionsToTravel = GetValidDirections(currentPoint);
+            }
+            
+        }
+
+        private void GenerateRandomBlockedRegions(int numberOfRegions)
+        {
+            for (int i = 0; i < numberOfRegions; i++)
+            {
+                _logger.Info($"Generating Open Space [{i}]");
+                GenerateRandomBlockedRegion(_random.Next(Width/5,Width/3));
+            }
+        }
+
+        private void OpenBlockedRegions()
+        {
+            for (int z = 0; z < Height - 1; z++)
+            {
+                _logger.Info($"OpenBlockedRegions Line [{z + 1}]");
+                for (int x = 0; x < Width - 1; x++)
+                {
+                    if (BitMap[x, z] == ValidDirection.ReservedSpace)
+                    {
+                        if (x > 0)
+                            BitMap[x - 1, z] &= ~ValidDirection.East;
+                        if (z > 0)
+                            BitMap[x, z -1] &= ~ValidDirection.South;
+                        if (x < Width-1)
+                            BitMap[x + 1, z] &= ~ValidDirection.West;
+                        if (z < Height-1)
+                            BitMap[x, z+1] &= ~ValidDirection.North;
+                    }
+                }
+            }
+        }
+
+        private void GenerateRandomBlockedRegion(int regionSize)
+        {
+            var startingPoint = new Vector2<int>(_random.Next(0,Width-1), _random.Next(0, Height-1));
+            for (int i = 0; i < regionSize; i++)
+            {
+                BitMap[startingPoint.X, startingPoint.Z] = ValidDirection.ReservedSpace;                
+                var randomDirection = GetRandomDirection(GetValidDirections(startingPoint));
+                if (randomDirection == ValidDirection.None) 
+                    break;
+                startingPoint = startingPoint.NeighborInDirection(randomDirection);
             }
         }
 
@@ -106,9 +153,10 @@ namespace _7DaysToDie.Maze
                 heightMap.Create();
                 for (int z = 0; z < Height - 1; z++)
                 {
+                    _logger.Info($"Rendering Line [{z+1}]");
                     for (int x = 0; x < Width - 1; x++)
                     {
-                        _logger.Info($"Rendering Cell [{x},{z}]");
+                        
                         if ((BitMap[x, z] & ValidDirection.North) != 0)
                         {
                             SetLine(x * bitPerCell, bitPerCell,
@@ -133,6 +181,7 @@ namespace _7DaysToDie.Maze
                                 heightMap.SetPixel(x * bitPerCell, counter, shadeHeight));
                         }
                     }
+                    
                 }
 
                 _logger.Info($"Saving HeightMap");
