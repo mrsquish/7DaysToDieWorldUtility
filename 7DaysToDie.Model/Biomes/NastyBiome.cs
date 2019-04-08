@@ -11,7 +11,6 @@ namespace _7DaysToDie.Model.Biomes
         private float _canyonFactor;
         private float _riverFactor;
         private float riverLoweringFactor;
-        private float _baseLevel;
 
         private INoise _generalLandscapeNoise;
         private INoise _featureNoise;
@@ -40,12 +39,11 @@ namespace _7DaysToDie.Model.Biomes
 
         private void SetLevels()
         {
-            _baseLevel = ((float)ushort.MaxValue / 4);
             _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue / 5);
             _mazeNoise.Amplitude = (float)ushort.MaxValue;
             _featureNoise.Amplitude = (float)ushort.MaxValue / 15;
             _riverFactor = _mazeNoise.Amplitude - (_mazeNoise.Amplitude / (float)8);
-            _canyonFactor = _baseLevel + _generalLandscapeNoise.Amplitude
+            _canyonFactor = BaseLevel + _generalLandscapeNoise.Amplitude
                             - _generalLandscapeNoise.Amplitude / (float)1.5;
             riverLoweringFactor = (float)0.1;
         }
@@ -68,11 +66,11 @@ namespace _7DaysToDie.Model.Biomes
             
             if (level > _riverFactor)
             {
-                level = _baseLevel;
+                level = BaseLevel;
             }
             else
             {
-                level = _baseLevel + _generalLandscapeNoise.GetNoise(x, y);
+                level = BaseLevel + _generalLandscapeNoise.GetNoise(x, y);
                 //+ _featureNoise.GetNoise(x, y);
             }
 

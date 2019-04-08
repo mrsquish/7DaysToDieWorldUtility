@@ -29,13 +29,16 @@ namespace _7DaysToDie.Model.Biomes
             _baseColor = baseColor;
             _noiseFactory = noiseFactory;
             Size = size;
-            SeaLevel = (ushort) 7650;
+            BaseLevel = (ushort) 7650;
+            SeaLevel = BaseLevel - (ushort.MaxValue / 255);
             if (!Directory.Exists(BaseDirectory))
                 Directory.CreateDirectory(BaseDirectory);
         }
         
         public int Size { get; protected set; }
         public string BaseDirectory { get; protected set; }
+
+        public float BaseLevel { get; private set; }
 
         public float SeaLevel { get; private set; }
 

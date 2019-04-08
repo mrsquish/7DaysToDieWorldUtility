@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -13,16 +12,15 @@ using PixelFormat = System.Windows.Media.PixelFormat;
 
 namespace _7DaysToDie.Model
 {
-    public class HeightMap : IDisposable
+    public class RgbBitMap : IDisposable
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();
 
-        //private ushort[] _bitMap;
-        public float[] Map;
-
-        public HeightMap(int size)
+        private uint[] Map;
+        public RgbBitMap(int size)
         {
             Size = size;
+            Map = new uint[Size * Size];
         }
         
         public int Size { get; }
@@ -30,22 +28,16 @@ namespace _7DaysToDie.Model
         public void Dispose()
         {
         }
-
-        public void Create()
-        {
-            Map = new float[Size * Size];            
-        }
-
+        
         public void Save(string fileName)
         {            
-            var bitMap = SaveRaw(Path.ChangeExtension(fileName, "raw"));
-            SavePng(Path.ChangeExtension(fileName, "png"), bitMap);
+            SavePng(Path.ChangeExtension(fileName, "png"), Map);
         }
 
-        private void SavePng(string fileName, ushort[] bitMap)
+        private void SavePng(string fileName, uint[] bitMap)
         {
             var rect = new Rectangle(0, 0, Size, Size);
-            var b16Bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale);
+            var b16Bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             var bitmapData = b16Bpp.LockBits(rect, ImageLockMode.WriteOnly, b16Bpp.PixelFormat);
 
             // Copy the randomized bits to the bitmap pointer.
@@ -56,37 +48,15 @@ namespace _7DaysToDie.Model
             b16Bpp.UnlockBits(bitmapData);
             SaveBmp(b16Bpp, fileName);
         }
-
-        private ushort[] SaveRaw(string filename)
-        {
-            var bitMap = new ushort[Size * Size];
-            using (BinaryWriter writer = new BinaryWriter(File.Create(filename)))            
-            {
-                for (int row = 0; row < Size; row++)
-                {
-                    for (int column = 0; column < Size; column++)
-                    {
-                        //BinaryWriter will write the value in little Endian. 
-                        var output = (ushort) Map[row * Size + column];
-                        bitMap[row * Size + column] = output;                        
-                        writer.Write(output);                        
-                    }
-                }
-            }
-
-            return bitMap;
-        }
-
-        public float this[int x, int z]
-        {
-            get => Map[z * Size + x];
-            set => Map[z * Size + x] = value;
-        }
-
-        public void SetPixel(int x, int y, float shade)
+        
+        public void SetPixel(int x, int y, byte Red, byte Green, byte Blue)
         {
             var i = ((y * Size) + x);
-            Map[i] = shade;      
+            uint red = (uint)(Red << 16);
+            uint green = (uint)(Green << 8);
+            var bitValue = (uint)(Blue + green + red);
+
+            Map[i] = bitValue;
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]
@@ -147,7 +117,7 @@ namespace _7DaysToDie.Model
             switch (pixelformat)
             {
                 case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                    pixelFormats = PixelFormats.Bgr32;
+                    pixelFormats = PixelFormats.Bgra32;
                     break;
 
                 case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
@@ -156,6 +126,10 @@ namespace _7DaysToDie.Model
 
                 case System.Drawing.Imaging.PixelFormat.Format16bppGrayScale:
                     pixelFormats = PixelFormats.Gray16;
+                    break;
+
+                case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
+                    pixelFormats = PixelFormats.Bgr555;
                     break;
             }
 

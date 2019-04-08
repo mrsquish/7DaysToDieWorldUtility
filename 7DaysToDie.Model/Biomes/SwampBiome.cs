@@ -77,7 +77,7 @@ namespace _7DaysToDie.Model.Biomes
             //float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
             var level = _swampPathNoise.GetNoise(x, y);
 
-            level = SeaLevel + (float) (Math.Round((double) level / _stepFactor) * _stepFactor);
+            level = BaseLevel + (float) (Math.Round((double) level / _stepFactor) * _stepFactor);
 
             if (level < _pathLevel) level = _pathLevel - _swampFillerNoise.Amplitude + _swampFillerNoise.GetNoise(x, y);
             /*

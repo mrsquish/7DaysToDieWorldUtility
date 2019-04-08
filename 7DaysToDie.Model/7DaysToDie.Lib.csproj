@@ -58,6 +58,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\RgbBitMap.cs" />
     <Compile Include="Base\HeightMap.cs" />
     <Compile Include="Biomes\Base\BiomeBase.cs" />
     <Compile Include="Biomes\SwampBiome.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Base\PngImageSquare.cs" />
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Roads\RoadGenerator.cs" />
     <Compile Include="TFPCodeReference.cs" />
     <Compile Include="Model\Vector3T.cs" />
     <Compile Include="Model\Vector3.cs" />
