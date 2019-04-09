@@ -74,7 +74,9 @@
     <Compile Include="Images\BiomeImagePng.cs" />
     <Compile Include="Maze\Maze.cs" />
     <Compile Include="Model\HeightMap.cs" />
+    <Compile Include="Model\PathT.cs" />
     <Compile Include="Model\Point2.cs" />
+    <Compile Include="Model\PriorityQueueT.cs" />
     <Compile Include="Model\Vector2Int.cs" />
     <Compile Include="Model\Vector2T.cs" />
     <Compile Include="Noise\FastNoise.cs" />
