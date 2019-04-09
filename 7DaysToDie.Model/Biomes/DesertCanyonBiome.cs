@@ -18,8 +18,7 @@ namespace _7DaysToDie.Model.Biomes
         
         private float _canyonFactor;
         private float _riverFactor;
-        private float riverLoweringFactor;
-        private float _baseLevel;
+        private float riverLoweringFactor;      
         private float _cellNoiseMultiplier;
 
         private readonly INoise _featureRockNoise;
@@ -51,7 +50,6 @@ namespace _7DaysToDie.Model.Biomes
 
         private void SetLevels()
         {
-            _baseLevel = ((float)ushort.MaxValue / 10);
             _generalRollingBaseNoise.Amplitude = ((float)ushort.MaxValue / 6);
             _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue / 3);
 
@@ -83,18 +81,18 @@ namespace _7DaysToDie.Model.Biomes
 
             if (level < _riverFactor)
             {
-                level = _baseLevel + baseLandscape + level - (level * riverLoweringFactor);
+                level = BaseLevel + baseLandscape + level - (level * riverLoweringFactor);
             }
             else if (level > _canyonFactor)
             {
-                level = _baseLevel + baseLandscape + level;
+                level = BaseLevel + baseLandscape + level;
                 var step = (float)(Math.Round((double)level / 3200) * 3200);
                 if (step < level) step = level;
                 level = step + _featureRockNoise.GetNoise(x, y);
             }
             else
             {
-                level = _baseLevel + baseLandscape + level;
+                level = BaseLevel + baseLandscape + level;
             }
 
             return level < 0 ? 0 : level;

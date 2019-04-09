@@ -14,6 +14,7 @@ using _7DaysToDie.Model;
 using _7DaysToDie.Model.Biomes;
 using _7DaysToDie.Model.Images;
 using _7DaysToDie.Model.Noise;
+using _7DaysToDie.Roads;
 
 namespace _7DaysToDieWorldUtil
 {
@@ -48,10 +49,16 @@ namespace _7DaysToDieWorldUtil
             */
             if (Directory.Exists("C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing"))
                 TestingPath = "C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing";
-            else
+            else if (Directory.Exists("D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k"))
             {
                 TestingPath = "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k";
+            } else
+            {
+                TestingPath = @"C:\Users\adam\AppData\Roaming\7DaysToDie\GeneratedWorlds\Testing";
             }
+
+            TestPng();
+            return;
 
             TestMaze();
             return;
@@ -66,6 +73,12 @@ namespace _7DaysToDieWorldUtil
             }
             HeightMapTest();
 
+        }
+
+        private static void TestPng()
+        {
+            var roads = new RoadGenerator();
+            roads.Generate(Path.Combine(TestingPath, "roads.png"));
         }
 
         public static void TestMaze()
