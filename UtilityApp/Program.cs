@@ -33,6 +33,7 @@ namespace _7DaysToDieWorldUtil
 
 
     ///Path Finding :
+    /// https://blogs.msdn.microsoft.com/ericlippert/tag/astar/
     /// https://blogs.msdn.microsoft.com/ericlippert/2007/10/04/path-finding-using-a-in-c-3-0-part-two/
 
     class Program

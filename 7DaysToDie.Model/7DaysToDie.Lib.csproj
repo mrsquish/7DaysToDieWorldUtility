@@ -66,6 +66,7 @@
     <Compile Include="Biomes\DesertCanyonBiome.cs" />
     <Compile Include="Biomes\NastyBiome.cs" />
     <Compile Include="Contracts\IBiome.cs" />
+    <Compile Include="Contracts\IHasNeighbours.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Erosion\Erosion.cs" />
     <Compile Include="Erosion\ErosionMine.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Base\PngImageSquare.cs" />
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Roads\PathFinding.cs" />
     <Compile Include="Roads\RoadGenerator.cs" />
     <Compile Include="TFPCodeReference.cs" />
     <Compile Include="Model\Vector3T.cs" />
