@@ -52,12 +52,7 @@ namespace _7DaysToDieWorldUtil
                 TestingPath = @"C:\Users\adam\AppData\Roaming\7DaysToDie\GeneratedWorlds\Testing";
             }
 
-            TestPng();
-            return;
-
-            TestMaze();
-            return;
-
+            
             ConfigureLoggingFramework();
             var logger = LogManager.GetCurrentClassLogger();
             // Check if FreeImage.dll is available (can be in %path%).
@@ -66,14 +61,13 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
+
             HeightMapTest();
+            return;
 
-        }
+            TestMaze();
+            return;
 
-        private static void TestPng()
-        {
-            var roads = new RoadGenerator();
-            roads.Generate(Path.Combine(TestingPath, "roads.png"));
         }
 
         public static void TestMaze()

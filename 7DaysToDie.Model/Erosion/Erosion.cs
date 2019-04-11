@@ -76,7 +76,7 @@ namespace _7DaysToDie.Erosion
             }
         }
 
-        public void Erode(HeightMap heightMap, int mapSize, int numIterations = 1, bool resetSeed = false)
+        public void Erode(_7DaysToDie.Model.HeightMap heightMap, int mapSize, int numIterations = 1, bool resetSeed = false)
         {
             Initialize(mapSize, resetSeed);
             
@@ -170,7 +170,7 @@ namespace _7DaysToDie.Erosion
             }
         }
 
-        HeightAndGradient CalculateHeightAndGradient(HeightMap heightMap, int mapSize, float posX, float posY)
+        HeightAndGradient CalculateHeightAndGradient(_7DaysToDie.Model.HeightMap heightMap, int mapSize, float posX, float posY)
         {
             int coordX = (int)posX;
             int coordY = (int)posY;

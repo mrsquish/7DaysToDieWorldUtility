@@ -148,7 +148,7 @@ namespace _7DaysToDie.Maze
         public void RenderToHeightMap(string path, int bitPerCell)
         {
             var shadeHeight = ushort.MaxValue - (ushort.MaxValue / 4);
-            using (var heightMap = new HeightMap(Height * bitPerCell))
+            using (var heightMap = new _7DaysToDie.Model.HeightMap(Height * bitPerCell))
             {
                 heightMap.Create();
                 for (int z = 0; z < Height - 1; z++)

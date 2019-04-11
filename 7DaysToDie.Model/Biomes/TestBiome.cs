@@ -2,6 +2,7 @@
 using System.IO;
 using _7DaysToDie.Model.Extensions;
 using _7DaysToDie.Model.Noise;
+using _7DaysToDie.Roads;
 
 namespace _7DaysToDie.Model.Biomes
 {
@@ -34,12 +35,23 @@ namespace _7DaysToDie.Model.Biomes
                 SetLevels();
                 heightMap.Create();
                 RegenerateHeightMap(heightMap);
-                
-                var erosion = new _7DaysToDie.Erosion.Erosion();
-                erosion.Erode(heightMap, heightMap.Size, 1000000, true);
-                
+                GenerateRoads(heightMap);
+                //Erode(heightMap);
+
                 heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));
             }
+        }
+
+        private void GenerateRoads(HeightMap heightMap)
+        {
+            var generator = new RoadGenerator(Size, 3, heightMap);
+            generator.Generate();
+        }
+
+        private void Erode(HeightMap heightMap)
+        {
+            var erosion = new _7DaysToDie.Erosion.Erosion();
+            erosion.Erode(heightMap, heightMap.Size, 1000000, true);
         }
 
         private void SetLevels()
