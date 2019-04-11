@@ -30,6 +30,12 @@ namespace _7DaysToDieWorldUtil
 
     // Implement this : https://github.com/Auburns/FastNoise_CSharp
     // Gausian Blur if needed : http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
+
+
+    ///Path Finding :
+    /// https://blogs.msdn.microsoft.com/ericlippert/tag/astar/
+    /// https://blogs.msdn.microsoft.com/ericlippert/2007/10/04/path-finding-using-a-in-c-3-0-part-two/
+
     class Program
     {
         public static string TestingPath;
