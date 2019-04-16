@@ -18,5 +18,6 @@ namespace _7DaysToDie.Model.Extensions
         public static readonly Color WasteLandColor = Color.FromArgb(255, 168, 0);
 
         public static readonly Color BurntForestColor = Color.FromArgb(186, 0, 255);
+        
     }
 }

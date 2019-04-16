@@ -43,11 +43,7 @@ namespace _7DaysToDieWorldUtil
         
 
         static void Main(string[] args)
-        {
-            /*
-            PngImageSquare.TestPng();
-            return;
-            */
+        {          
             if (Directory.Exists("C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing"))
                 TestingPath = "C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing";
             else if (Directory.Exists("D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k"))
@@ -67,7 +63,7 @@ namespace _7DaysToDieWorldUtil
                 logger.Error("FreeImage.dll seems to be missing. Aborting.");
                 return;
             }
-
+            
             HeightMapTest();
             return;
 
@@ -78,9 +74,9 @@ namespace _7DaysToDieWorldUtil
 
         public static void TestMaze()
         {
-            var maze = new Maze(64);
-            maze.GenerateRecursiveBackTracker();
-            maze.RenderToHeightMap(Path.Combine(TestingPath, "maze.raw"), 8);
+            var maze = new Maze(128);
+            maze.GenerateRecursiveBackTracker(15);
+            maze.RenderToHeightMap(Path.Combine(TestingPath, "maze.raw"), 32);
 
         }
 

@@ -24,11 +24,13 @@ namespace _7DaysToDie.Model
         {
             return new Path<Node>(step, this, TotalCost + stepCost);
         }
+
         public IEnumerator<Node> GetEnumerator()
         {
             for (Path<Node> p = this; p != null; p = p.PreviousSteps)
                 yield return p.LastStep;
         }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

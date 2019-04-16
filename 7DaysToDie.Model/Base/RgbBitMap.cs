@@ -28,7 +28,15 @@ namespace _7DaysToDie.Model
         public void Dispose()
         {
         }
-        
+
+        public void Initialise(byte Red, byte Green, byte Blue)
+        {
+            for (int i = 0; i < (Size * Size)-1; i++)
+            {
+                SetPixel(i, Red, Green, Blue);
+            }
+        }
+
         public void Save(string fileName)
         {            
             SavePng(Path.ChangeExtension(fileName, "png"), Map);
@@ -48,15 +56,20 @@ namespace _7DaysToDie.Model
             b16Bpp.UnlockBits(bitmapData);
             SaveBmp(b16Bpp, fileName);
         }
-        
+
+        public void SetPixel(int i, byte Red, byte Green, byte Blue)
+        {
+            uint alpha = ((uint) 255) << 24;
+            uint red = (uint)(Red << 16);
+            uint green = (uint)(Green << 8);
+            var bitValue = (uint)(alpha + Blue + green + red);
+            Map[i] = bitValue;
+        }
+
         public void SetPixel(int x, int y, byte Red, byte Green, byte Blue)
         {
             var i = ((y * Size) + x);
-            uint red = (uint)(Red << 16);
-            uint green = (uint)(Green << 8);
-            var bitValue = (uint)(Blue + green + red);
-
-            Map[i] = bitValue;
+            SetPixel(i, Red, Green, Blue);            
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]

@@ -23,12 +23,21 @@ namespace _7DaysToDie.Model
         public HeightMap(int size)
         {
             Size = size;
+            Create();
         }
         
         public int Size { get; }
 
         public void Dispose()
         {
+        }
+
+        public void Initialise(float initialHeight)
+        {
+            for (int i = 0; i < Map.Length-1; i++)
+            {
+                Map[i] = initialHeight;
+            }
         }
 
         public void Create()

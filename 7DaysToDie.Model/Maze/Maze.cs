@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using NLog.LayoutRenderers.Wrappers;
+using _7DaysToDie.Base;
 using _7DaysToDie.Model;
 using _7DaysToDie.Model.Model;
 
@@ -72,13 +73,13 @@ namespace _7DaysToDie.Maze
         {
             Width = size;
             Height = size;
-            BitMap = new ValidDirection[size, size];
+            BitMap = new ValidDirection[size, size];            
         }
 
-        public void GenerateRecursiveBackTracker()
+        public void GenerateRecursiveBackTracker(int blockedRegionCount)
         {
             InitialiseArray();
-            GenerateRandomBlockedRegions(10);
+            GenerateRandomBlockedRegions(blockedRegionCount);
             var start = GetRandomStartingPoint();
             _logger.Info($"Starting At  [{start.X},{start.Z}]");
             GenerateRecursiveBackTracker(start);
@@ -137,66 +138,27 @@ namespace _7DaysToDie.Maze
             var startingPoint = new Vector2<int>(_random.Next(0,Width-1), _random.Next(0, Height-1));
             for (int i = 0; i < regionSize; i++)
             {
-                BitMap[startingPoint.X, startingPoint.Z] = ValidDirection.ReservedSpace;                
-                var randomDirection = GetRandomDirection(GetValidDirections(startingPoint));
-                if (randomDirection == ValidDirection.None) 
+                BitMap[startingPoint.X, startingPoint.Z] = ValidDirection.ReservedSpace;
+                var validDirections = GetValidDirections(startingPoint, vector2 => true);
+                if (validDirections == ValidDirection.None)
                     break;
-                startingPoint = startingPoint.NeighborInDirection(randomDirection);
+                
+                var randomDirection = GetRandomDirection(validDirections);
+                if (randomDirection == ValidDirection.None)
+                    break;
+                startingPoint = startingPoint.NeighborInDirection(randomDirection);                               
             }
         }
 
-        public void RenderToHeightMap(string path, int bitPerCell)
+        public void RenderToHeightMap(string path, int bitsPerCell)
         {
-            var shadeHeight = ushort.MaxValue - (ushort.MaxValue / 4);
-            using (var heightMap = new _7DaysToDie.Model.HeightMap(Height * bitPerCell))
+            using (var renderer = new MazeRenderer(Height, bitsPerCell, 20, 4, (cellX, cellZ) => BitMap[cellX, cellZ]))
             {
-                heightMap.Create();
-                for (int z = 0; z < Height - 1; z++)
-                {
-                    _logger.Info($"Rendering Line [{z+1}]");
-                    for (int x = 0; x < Width - 1; x++)
-                    {
-                        
-                        if ((BitMap[x, z] & ValidDirection.North) != 0)
-                        {
-                            SetLine(x * bitPerCell, bitPerCell,
-                                counter => heightMap.SetPixel(counter, z * bitPerCell, shadeHeight));
-                        }
-
-                        if ((BitMap[x, z] & ValidDirection.South) != 0)
-                        {
-                            SetLine(x * bitPerCell, bitPerCell, counter =>
-                                heightMap.SetPixel(counter, z * bitPerCell + bitPerCell - 1, shadeHeight));
-                        }
-
-                        if ((BitMap[x, z] & ValidDirection.East) != 0)
-                        {
-                            SetLine(z * bitPerCell, bitPerCell, counter =>
-                                heightMap.SetPixel(x * bitPerCell + bitPerCell - 1, counter, shadeHeight));
-                        }
-
-                        if ((BitMap[x, z] & ValidDirection.West) != 0)
-                        {
-                            SetLine(z * bitPerCell, bitPerCell, counter =>
-                                heightMap.SetPixel(x * bitPerCell, counter, shadeHeight));
-                        }
-                    }
-                    
-                }
-
-                _logger.Info($"Saving HeightMap");
-                heightMap.Save(path);
+                renderer.RenderToHeightMap();
+                renderer.SaveHeightMap(path);
             }
         }
-
-        private void SetLine(int startX, int bitPerCell, Action<int> forLineAction)
-        {
-            for (int i = startX; i < startX + bitPerCell - 1; i++)
-            {
-                forLineAction(i);
-            }
-        } 
-
+        
         private void RemoveWall(ValidDirection direction, Vector2<int> currentPoint)
         {
             BitMap[currentPoint.X, currentPoint.Z] &= ~direction;
@@ -241,19 +203,25 @@ namespace _7DaysToDie.Maze
                    (validDirectionValue & (validDirectionValue - 1)) == 0;
         }
 
-        private ValidDirection GetValidDirections(Vector2<int> currentPoint)
+        private ValidDirection GetValidDirections(Vector2<int> currentPoint, Func<Vector2<int>,bool> caveatFunc)
         {
             var validDirections = ValidDirection.None;
 
-            if (!IsOnNorthBoarder(currentPoint) && !PointVisited(currentPoint.PointToNorth()))
+            if (!IsOnNorthBoarder(currentPoint) && !caveatFunc(currentPoint.PointToNorth()))
                 validDirections = validDirections | ValidDirection.North;
-            if (!IsOnEastBoarder(currentPoint) && !PointVisited(currentPoint.PointToEast()))
+            if (!IsOnEastBoarder(currentPoint) && !caveatFunc(currentPoint.PointToEast()))
                 validDirections = validDirections | ValidDirection.East;
-            if (!IsOnSouthBoarder(currentPoint) && !PointVisited(currentPoint.PointToSouth()))
+            if (!IsOnSouthBoarder(currentPoint) && !caveatFunc(currentPoint.PointToSouth()))
                 validDirections = validDirections | ValidDirection.South;
-            if (!IsOnWestBoarder(currentPoint) && !PointVisited(currentPoint.PointToWest()))
+            if (!IsOnWestBoarder(currentPoint) && !caveatFunc(currentPoint.PointToWest()))
                 validDirections = validDirections | ValidDirection.West;
             return validDirections;
+
+        }
+
+        private ValidDirection GetValidDirections(Vector2<int> currentPoint)
+        {
+            return GetValidDirections(currentPoint, PointVisited);
         }
 
         private Vector2<int> GetRandomStartingPoint()

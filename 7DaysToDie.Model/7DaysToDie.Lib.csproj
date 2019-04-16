@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Base\RgbBitMap.cs" />
     <Compile Include="Base\HeightMap.cs" />
+    <Compile Include="Base\WorldSettings.cs" />
     <Compile Include="Biomes\Base\BiomeBase.cs" />
     <Compile Include="Biomes\SwampBiome.cs" />
     <Compile Include="Biomes\TestBiome.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Extensions\Biome.cs" />
     <Compile Include="Images\BiomeImagePng.cs" />
     <Compile Include="Maze\Maze.cs" />
+    <Compile Include="Maze\MazeRenderer.cs" />
     <Compile Include="Model\HeightMap.cs" />
     <Compile Include="Model\PathT.cs" />
     <Compile Include="Model\Point2.cs" />

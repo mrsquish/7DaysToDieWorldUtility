@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using _7DaysToDie.Base;
 using _7DaysToDie.Model.Extensions;
 using _7DaysToDie.Model.Noise;
 using _7DaysToDie.Roads;
@@ -8,10 +9,6 @@ namespace _7DaysToDie.Model.Biomes
 {
     public class TestBiome : BiomeBase
     {
-        private float riverLoweringFactor;
-        private float _baseLevel;
-        private float _cellNoiseMultiplier;
-
         private readonly INoise _featureRockNoise;
         private readonly INoise _generalLandscapeNoise;
         private readonly INoise _generalRollingBaseNoise;
@@ -24,7 +21,7 @@ namespace _7DaysToDie.Model.Biomes
             _generalRollingBaseNoise = noiseFactory.GetRollingBaseLandscape((float)0.002);
             _featureRockNoise = noiseFactory.GetFeatureRockNoise((float)0.06, (float)0.1);
             
-            _generalLandscapeNoise = noiseFactory.GetPerlinFractalBillow((float)0.002);
+            _generalLandscapeNoise = noiseFactory.GetPerlinFractalBillow((float)0.004);
             _cellNoise = noiseFactory.GetRollingBaseLandscape((float)0.05); //noiseFactory.GetCellularNoiseForLandscapeAddition((float)0.015);
         }
 
@@ -44,8 +41,9 @@ namespace _7DaysToDie.Model.Biomes
 
         private void GenerateRoads(HeightMap heightMap)
         {
-            var generator = new RoadGenerator(Size, 3, heightMap);
+            var generator = new RoadGenerator(Size, 2, heightMap);
             generator.Generate();
+            generator.Save(BaseDirectory);
         }
 
         private void Erode(HeightMap heightMap)
@@ -56,15 +54,13 @@ namespace _7DaysToDie.Model.Biomes
 
         private void SetLevels()
         {
-            _baseLevel = ((float)ushort.MaxValue / 6);
-            _generalRollingBaseNoise.Amplitude = ((float)ushort.MaxValue / 5);
-            _generalLandscapeNoise.Amplitude = ((float)ushort.MaxValue / 3);
+            
+            _generalRollingBaseNoise.Amplitude = WorldSettings.UnitLevel * 40;
+            _generalLandscapeNoise.Amplitude = WorldSettings.UnitLevel * 60;
 
             _cellNoise.Amplitude = (float)8;
-            _cellNoiseMultiplier = (float)ushort.MaxValue / 30;
 
-            _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;
-            riverLoweringFactor = (float)0.01;
+            _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;            
         }
 
         public void RegenerateHeightMap(HeightMap heightMap)
@@ -84,7 +80,7 @@ namespace _7DaysToDie.Model.Biomes
             float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
             float level = _generalLandscapeNoise.GetNoise(x, y);
 
-            level = _baseLevel + baseLandscape + level;
+            level = WorldSettings.GroundLevel + baseLandscape + level;
             
             return level < 0 ? 0 : level;
         }
