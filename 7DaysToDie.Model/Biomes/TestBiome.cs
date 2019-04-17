@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using _7DaysToDie.Base;
+﻿using _7DaysToDie.Base;
 using _7DaysToDie.Model.Extensions;
 using _7DaysToDie.Model.Noise;
 using _7DaysToDie.Roads;
+using System.IO;
 
 namespace _7DaysToDie.Model.Biomes
 {
@@ -56,7 +55,7 @@ namespace _7DaysToDie.Model.Biomes
         {
             
             _generalRollingBaseNoise.Amplitude = WorldSettings.UnitLevel * 40;
-            _generalLandscapeNoise.Amplitude = WorldSettings.UnitLevel * 60;
+            _generalLandscapeNoise.Amplitude = WorldSettings.UnitLevel * 120;
 
             _cellNoise.Amplitude = (float)8;
 

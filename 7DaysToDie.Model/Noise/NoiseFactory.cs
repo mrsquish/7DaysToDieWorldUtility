@@ -10,6 +10,15 @@ namespace _7DaysToDie.Model.Noise
     {
         private Random _random = new Random();
 
+        public NoiseFactory()
+        {
+        }
+
+        public NoiseFactory(int seed)
+        {
+            _random = new Random(seed);
+        }
+
         public INoise GetCellularNoiseForLandscapeAddition(float freq = (float)0.0015)
         {
             var myNoise = new FastNoise(_random.Next(int.MinValue, int.MaxValue));

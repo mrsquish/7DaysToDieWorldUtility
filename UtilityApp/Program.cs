@@ -59,7 +59,7 @@ namespace _7DaysToDieWorldUtil
 
         public static void HeightMapTest()
         {
-            using (var biome = new TestBiome(TestingPath, 1096, new NoiseFactory()))
+            using (var biome = new TestBiome(TestingPath, 1096, new NoiseFactory(555)))
             {
                 biome.Generate();
             }

@@ -7,6 +7,8 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using NLog;
+using _7DaysToDie.Model.Model;
 
 namespace _7DaysToDie.Roads
 {
@@ -14,6 +16,7 @@ namespace _7DaysToDie.Roads
 
     public class RoadGenerator
     {
+        protected static ILogger _logger = LogManager.GetCurrentClassLogger();
         private readonly int _size;
         private readonly int _cellMapSize;
         private readonly int _maxPoiCount;
@@ -42,7 +45,9 @@ namespace _7DaysToDie.Roads
         public void Generate()
         {
             GenerateCellMetricsMap();
-            FindPoiLocations();
+            //FindPoiLocations();
+            _poiLocations.Add(cellGraph[110,10]);
+            _poiLocations.Add(cellGraph[40, 120]);
             GenerateRoadsBetweenPois();
         }
 
@@ -87,37 +92,71 @@ namespace _7DaysToDie.Roads
         
 
         private double GetEstimate(RoadCell arg, RoadCell destination)
+        {            
+            return WalkDirectEstimate(arg, destination, GetUnitDistance);            
+        }
+
+        private double WalkDirectEstimate(RoadCell arg, RoadCell destination, Func<RoadCell,RoadCell,int, double> getDistance)
         {
-            return 1; GetStandardDistance(arg, destination);
-            //return GetDirectLineDistance(Math.Abs(arg.AvgCellHeight - destination.AvgCellHeight), (int)GetDirectLineDistance(Math.Abs(arg.X - destination.X), Math.Abs(arg.Z - destination.Z)));
+            var walker = new Vector2<int>(arg.X, arg.Z);
+            var previousCell = arg;
+            var factors = GetWalkerFactors(arg, destination);
+            double totalWalkingCost = 0;
+            int stepCounter = 1;
+            do
+            {
+                walker.X = (int)Math.Round(factors.X * stepCounter, 0);
+                walker.Z = (int)Math.Round(factors.Z * stepCounter, 0);
+                totalWalkingCost += getDistance(previousCell, cellGraph[walker.X, walker.Z], 8);
+                stepCounter++;
+            } while (walker.X != destination.X && walker.Z != destination.Z);
+            //_logger.Info($"From ({arg.X},{arg.Z})->({destination.X},{destination.Z}) Distance = {totalWalkingCost}");
+            return totalWalkingCost;
+        }
+
+        private Vector2<float> GetWalkerFactors(RoadCell arg, RoadCell destination)
+        {
+            var xDistance = arg.X - destination.X;
+            var zDistance = arg.Z - destination.Z;
+            var factors = new Vector2<float>(1,1);
+            if (Math.Abs(xDistance) > Math.Abs(zDistance))
+                factors.Z = (float)Math.Abs(zDistance) / (float)Math.Abs(xDistance);
+            if (Math.Abs(zDistance) > Math.Abs(xDistance))
+                factors.X = (float)Math.Abs(xDistance) / (float)Math.Abs(zDistance);
+            return factors;
         }
 
         private double GetDirectLineDistance(int a, int b)
         {
             return Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
         }
-
-        private double GetStandardDistance(RoadCell pointA, RoadCell pointB)
-        {
-            return (Math.Abs(pointA.X - pointB.X) * 256) +
-                   (Math.Abs(pointA.Z - pointB.Z) * 256);
-            return Math.Abs(pointA.Avg - pointB.Avg) + (Math.Abs(pointA.X - pointB.X)*256) +
-                   (Math.Abs(pointA.Z - pointB.Z)*256);
-        }
-
-        private double GetUnitDistance(RoadCell pointA, RoadCell pointB)
+        
+        private double GetUnitDistance(RoadCell pointA, RoadCell pointB, int heightFactor)
         {
             var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
-            if (heightDifference > 40)
-                return 16 * Math.Abs(pointA.Avg - pointB.Avg) + (Math.Abs(pointA.X - pointB.X) * 256) +
-                       (Math.Abs(pointA.Z - pointB.Z) * 256); 
-            return Math.Abs(pointA.Avg - pointB.Avg) + (Math.Abs(pointA.X - pointB.X) * 256) +
-                   (Math.Abs(pointA.Z - pointB.Z) * 256); 
+            var diagonalDistance = DiagonalDistance(pointA, pointB);
+//            if (heightDifference > 50)
+            return (heightFactor * heightDifference) + (diagonalDistance * 256); 
+            return 2 * heightDifference + (DistanceToNeighbor(pointA, pointB) * 256);
+        }
+
+        private double DiagonalDistance(RoadCell node, RoadCell goal)
+        {
+            var dx = Math.Abs(node.X - goal.X);
+            var dy = Math.Abs(node.Z - goal.Z);
+            return (dx + dy) + (1.414f - 2) * Math.Min(dx, dy);
+        }
+
+        private float DistanceToNeighbor(RoadCell pointA, RoadCell pointB)
+        {
+            if (pointA.X - pointB.X != 0 && pointA.Z - pointB.Z != 0)
+                return 1.414f;
+            return 1f;
         }
 
         private double GetDistance(RoadCell pointA, RoadCell pointB)
         {
-            var distance = GetUnitDistance(pointA, pointB);
+            var distance = GetUnitDistance(pointA, pointB, 8);
             return distance;
         }
 
