@@ -1,8 +1,4 @@
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImage.dll
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImageNET.dll
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\NLog.dll
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImageNET.pdb
-C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\FreeImageNET.xml
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\bin\x64\Debug\NLog.xml
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Lib.csprojAssemblyReference.cache
 C:\Users\ahardy\Documents\Visual Studio 2017\Projects\7DaysToDieWorldUtility\7DaysToDie.Model\obj\x64\Debug\7DaysToDie.Lib.csproj.CoreCompileInputs.cache

@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using FreeImageAPI;
 using NLog;
 using Color = System.Drawing.Color;
+using PixelFormat = System.Windows.Media.PixelFormat;
 
 namespace _7DaysToDie.Model
 {
@@ -21,10 +16,10 @@ namespace _7DaysToDie.Model
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();
 
         public ushort[] _bitMap;
-        private byte[] _bytes;
 
         private Bitmap _bitmap2;
-        
+        private byte[] _bytes;
+
         public PngImageSquare(int size)
         {
             Size = size;
@@ -43,22 +38,20 @@ namespace _7DaysToDie.Model
             bitmap[0] = 255;
             bitmap[4] = 255;
             bitmap[8] = 255;
-            using (Image image = Image.FromStream(new MemoryStream(bitmap)))
+            using (var image = Image.FromStream(new MemoryStream(bitmap)))
             {
-                image.Save("output.jpg", ImageFormat.Jpeg);  // Or Png
+                image.Save("output.jpg", ImageFormat.Jpeg); // Or Png
             }
-
         }
 
         public void Create()
         {
-
-            Bitmap cur = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
-            BitmapData curBitmapData = cur.LockBits(new Rectangle(0, 0, Size, Size),
+            var cur = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
+            var curBitmapData = cur.LockBits(new Rectangle(0, 0, Size, Size),
                 ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
-            Int32 stride = curBitmapData.Stride;
-            Byte[] data = new Byte[stride * cur.Height];
-            _bytes = new Byte[stride * cur.Height];
+            var stride = curBitmapData.Stride;
+            var data = new byte[stride * cur.Height];
+            _bytes = new byte[stride * cur.Height];
 
             Marshal.Copy(curBitmapData.Scan0, data, 0, data.Length);
             cur.UnlockBits(curBitmapData);
@@ -73,7 +66,7 @@ namespace _7DaysToDie.Model
             var rect = new Rectangle(0, 0, Size, Size);
             var b16bpp = new Bitmap(Size, Size, System.Drawing.Imaging.PixelFormat.Format16bppRgb555);
             var bitmapData = b16bpp.LockBits(rect, ImageLockMode.WriteOnly, b16bpp.PixelFormat);
-            
+
             // Copy the randomized bits to the bitmap pointer.
             var ptr = bitmapData.Scan0;
             Copy(_bitMap, ptr, 0, _bitMap.Length);
@@ -85,8 +78,7 @@ namespace _7DaysToDie.Model
 
         public void SetPixel(int x, int y, Color color)
         {
-            var i = ((y * Size) + x);
-            
+            var i = y * Size + x;
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]
@@ -131,7 +123,7 @@ namespace _7DaysToDie.Model
 
 
             var stream = new FileStream(path, FileMode.Create);
-            var encoder = new PngBitmapEncoder() { };
+            var encoder = new PngBitmapEncoder();
             //var encoder = new TiffBitmapEncoder {Compression = TiffCompressOption.Zip};
 
             encoder.Frames.Add(BitmapFrame.Create(source));
@@ -140,7 +132,7 @@ namespace _7DaysToDie.Model
             stream.Close();
         }
 
-        private static System.Windows.Media.PixelFormat ConvertBmpPixelFormat(System.Drawing.Imaging.PixelFormat pixelformat)
+        private static PixelFormat ConvertBmpPixelFormat(System.Drawing.Imaging.PixelFormat pixelformat)
         {
             var pixelFormats = PixelFormats.Default;
 

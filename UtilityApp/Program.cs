@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using FreeImageAPI;
+﻿using System.IO;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 using _7DaysToDie.Maze;
-using _7DaysToDie.Model;
 using _7DaysToDie.Model.Biomes;
-using _7DaysToDie.Model.Images;
 using _7DaysToDie.Model.Noise;
-using _7DaysToDie.Roads;
 
 namespace _7DaysToDieWorldUtil
 {
@@ -32,44 +20,34 @@ namespace _7DaysToDieWorldUtil
     // Gausian Blur if needed : http://haishibai.blogspot.com/2009/09/image-processing-c-tutorial-4-gaussian.html
 
 
-    ///Path Finding :
+    /// Path Finding :
     /// https://blogs.msdn.microsoft.com/ericlippert/tag/astar/
     /// https://blogs.msdn.microsoft.com/ericlippert/2007/10/04/path-finding-using-a-in-c-3-0-part-two/
-
-    class Program
+    internal class Program
     {
         public static string TestingPath;
 
-        
 
-        static void Main(string[] args)
-        {          
+        private static void Main(string[] args)
+        {
             if (Directory.Exists("C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing"))
                 TestingPath = "C:\\Users\\ahardy\\Documents\\HeightMaps\\Testing";
-            else if (Directory.Exists("D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k"))
-            {
-                TestingPath = "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k";
-            } else
-            {
+            else if (Directory.Exists(
+                "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k"))
+                TestingPath =
+                    "D:\\Program Files (x86)\\Steam\\SteamApps\\common\\7 Days To Die\\Data\\Worlds\\Testing4k";
+            else
                 TestingPath = @"C:\Users\adam\AppData\Roaming\7DaysToDie\GeneratedWorlds\Testing";
-            }
 
-            
+
             ConfigureLoggingFramework();
             var logger = LogManager.GetCurrentClassLogger();
-            // Check if FreeImage.dll is available (can be in %path%).
-            if (!FreeImage.IsAvailable())
-            {
-                logger.Error("FreeImage.dll seems to be missing. Aborting.");
-                return;
-            }
-            
+
             HeightMapTest();
             return;
 
             TestMaze();
             return;
-
         }
 
         public static void TestMaze()
@@ -77,26 +55,16 @@ namespace _7DaysToDieWorldUtil
             var maze = new Maze(128);
             maze.GenerateRecursiveBackTracker(15);
             maze.RenderToHeightMap(Path.Combine(TestingPath, "maze.raw"), 32);
-
         }
 
         public static void HeightMapTest()
         {
             using (var biome = new TestBiome(TestingPath, 1096, new NoiseFactory()))
-            {                
+            {
                 biome.Generate();
             }
         }
 
-        public static void AdjustPrefabHeight()
-        {
-            using (var world = World.LoadWorldPath(TestingPath))
-            {                
-                world.LevelAllPrefabsAtGroundHeight();
-                world.Prefabs.Save();
-            }
-        }
-        
         public static void ConfigureLoggingFramework()
         {
             LogManager.LoadConfiguration("nlog.config");

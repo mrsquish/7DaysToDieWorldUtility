@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using FreeImageAPI;
 using NLog;
 using File = System.IO.File;
 using PixelFormat = System.Windows.Media.PixelFormat;

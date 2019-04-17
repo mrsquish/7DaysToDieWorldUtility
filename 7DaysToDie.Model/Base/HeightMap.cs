@@ -2,13 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using FreeImageAPI;
 using NLog;
-using File = System.IO.File;
 using PixelFormat = System.Windows.Media.PixelFormat;
 
 namespace _7DaysToDie.Model
@@ -25,8 +22,14 @@ namespace _7DaysToDie.Model
             Size = size;
             Create();
         }
-        
+
         public int Size { get; }
+
+        public float this[int x, int z]
+        {
+            get => Map[z * Size + x];
+            set => Map[z * Size + x] = value;
+        }
 
         public void Dispose()
         {
@@ -34,19 +37,16 @@ namespace _7DaysToDie.Model
 
         public void Initialise(float initialHeight)
         {
-            for (int i = 0; i < Map.Length-1; i++)
-            {
-                Map[i] = initialHeight;
-            }
+            for (var i = 0; i < Map.Length - 1; i++) Map[i] = initialHeight;
         }
 
         public void Create()
         {
-            Map = new float[Size * Size];            
+            Map = new float[Size * Size];
         }
 
         public void Save(string fileName)
-        {            
+        {
             var bitMap = SaveRaw(Path.ChangeExtension(fileName, "raw"));
             SavePng(Path.ChangeExtension(fileName, "png"), bitMap);
         }
@@ -69,33 +69,25 @@ namespace _7DaysToDie.Model
         private ushort[] SaveRaw(string filename)
         {
             var bitMap = new ushort[Size * Size];
-            using (BinaryWriter writer = new BinaryWriter(File.Create(filename)))            
+            using (var writer = new BinaryWriter(File.Create(filename)))
             {
-                for (int row = 0; row < Size; row++)
+                for (var row = 0; row < Size; row++)
+                for (var column = 0; column < Size; column++)
                 {
-                    for (int column = 0; column < Size; column++)
-                    {
-                        //BinaryWriter will write the value in little Endian. 
-                        var output = (ushort) Map[row * Size + column];
-                        bitMap[row * Size + column] = output;                        
-                        writer.Write(output);                        
-                    }
+                    //BinaryWriter will write the value in little Endian. 
+                    var output = (ushort) Map[row * Size + column];
+                    bitMap[row * Size + column] = output;
+                    writer.Write(output);
                 }
             }
 
             return bitMap;
         }
 
-        public float this[int x, int z]
-        {
-            get => Map[z * Size + x];
-            set => Map[z * Size + x] = value;
-        }
-
         public void SetPixel(int x, int y, float shade)
         {
-            var i = ((y * Size) + x);
-            Map[i] = shade;      
+            var i = y * Size + x;
+            Map[i] = shade;
         }
 
         [DllImport("kernel32.dll", SetLastError = false)]
@@ -140,7 +132,7 @@ namespace _7DaysToDie.Model
 
 
             var stream = new FileStream(path, FileMode.Create);
-            var encoder = new PngBitmapEncoder() { };
+            var encoder = new PngBitmapEncoder();
             //var encoder = new TiffBitmapEncoder {Compression = TiffCompressOption.Zip};
 
             encoder.Frames.Add(BitmapFrame.Create(source));

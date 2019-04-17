@@ -74,7 +74,6 @@
     <Compile Include="Erosion\ErosionParameters.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
-    <Compile Include="Images\BiomeImagePng.cs" />
     <Compile Include="Maze\Maze.cs" />
     <Compile Include="Maze\MazeRenderer.cs" />
     <Compile Include="Model\HeightMap.cs" />
@@ -102,14 +101,10 @@
     <Compile Include="WorldSize.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FreeImage.Net\Library\Library.csproj">
-      <Project>{6598a7cd-8f27-4d3f-a675-5ae63113a7c3}</Project>
-      <Name>Library</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
