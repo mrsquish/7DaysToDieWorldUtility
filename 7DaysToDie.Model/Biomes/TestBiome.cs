@@ -40,7 +40,7 @@ namespace _7DaysToDie.Model.Biomes
 
         private void GenerateRoads(HeightMap heightMap)
         {
-            var generator = new RoadGenerator(Size, 2, heightMap);
+            var generator = new RoadGenerator(2, heightMap);
             generator.Generate();
             generator.Save(BaseDirectory);
         }

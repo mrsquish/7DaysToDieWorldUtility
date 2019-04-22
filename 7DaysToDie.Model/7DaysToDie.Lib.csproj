@@ -68,6 +68,7 @@
     <Compile Include="Biomes\NastyBiome.cs" />
     <Compile Include="Contracts\IBiome.cs" />
     <Compile Include="Contracts\IHasNeighbours.cs" />
+    <Compile Include="Contracts\IPathCell.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Erosion\Erosion.cs" />
     <Compile Include="Erosion\ErosionMine.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Model\Point2.cs" />
     <Compile Include="Model\PriorityQueueT.cs" />
     <Compile Include="Model\RoadCell.cs" />
+    <Compile Include="Roads\RoadCellMap.cs" />
     <Compile Include="Model\Vector2Int.cs" />
     <Compile Include="Model\Vector2T.cs" />
     <Compile Include="Noise\FastNoise.cs" />

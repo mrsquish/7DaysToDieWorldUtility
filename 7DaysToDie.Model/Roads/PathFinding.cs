@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using _7DaysToDie.Contracts;
 using _7DaysToDie.Model;
+using _7DaysToDie.Model.Model;
 
 namespace _7DaysToDie.Roads
 {
     static class PathFinding
     {
+        public static List<Vector2<int>> TwelveRadius16Points = new List<Vector2<int>>()
+        {
+            { new Vector2<int>(0,16) },
+            { new Vector2<int>(8,14) },
+            { new Vector2<int>(14,8) },
+            { new Vector2<int>(16,0) },
+            { new Vector2<int>(14,-8) },
+            { new Vector2<int>(8,-14) },
+            { new Vector2<int>(0,-16) },
+            { new Vector2<int>(-8,-14) },
+            { new Vector2<int>(-14,-8) },
+            { new Vector2<int>(-16,0) },
+            { new Vector2<int>(-14,8) },
+            { new Vector2<int>(-8,14) },
+            { new Vector2<int>(0,16) }
+        };
+
         public static Path<Node> FindPathForIHasNeighbours<Node>(
             Node start,
             Node destination,
@@ -38,7 +57,7 @@ namespace _7DaysToDie.Roads
             return null;
         }
 
-        public static Path<Node> FindPath<Node>(
+        public static Path<Node> AStarPathFindingUsingPriorityQueue<Node>(
             Node start,
             Node destination,
             Func<Node,IEnumerable<Node>> getNeighbours,
@@ -65,5 +84,7 @@ namespace _7DaysToDie.Roads
             }
             return null;
         }
+
+
     }
 }
