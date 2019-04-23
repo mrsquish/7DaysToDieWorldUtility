@@ -29,6 +29,22 @@ namespace _7DaysToDie.Roads
             { new Vector2<int>(0,16) }
         };
 
+        public static List<Vector2<int>> TwelveRadius4Points = new List<Vector2<int>>()
+        {
+            {new Vector2<int>(-2, 3)},
+            {new Vector2<int>(0, 4)},
+            {new Vector2<int>(2, 3)},
+            {new Vector2<int>(3, 2)},
+            {new Vector2<int>(4, 0)},
+            {new Vector2<int>(3, -2)},
+            {new Vector2<int>(2, -3)},
+            {new Vector2<int>(0, -4)},
+            {new Vector2<int>(-2, -3)},
+            {new Vector2<int>(-3, -2)},
+            {new Vector2<int>(-4, 0)},
+            {new Vector2<int>(-3, 2)}
+        };
+
         public static Path<Node> FindPathForIHasNeighbours<Node>(
             Node start,
             Node destination,

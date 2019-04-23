@@ -47,7 +47,7 @@ namespace _7DaysToDie.Roads
         private void GenerateRoadsBetweenPois()
         {
             var roadMap = new RoadCellMap(_heightMap, 8);
-            _poiLocations.Add(roadMap[110, 10]);
+            _poiLocations.Add(roadMap[100, 15]);
             _poiLocations.Add(roadMap[40, 120]);
 
             for (int poiIndex = 0; poiIndex < _poiLocations.Count-1; poiIndex++)
@@ -67,17 +67,19 @@ namespace _7DaysToDie.Roads
         private void GenerateRoad(RoadCell pointA, RoadCell pointB, RoadCellMap roadMap)
         {
             var end = roadMap.BuildPath(pointA, pointB).Result;
-            RenderPathToMap(pointA);
+            roadMap.TestPath(pointA, pointB);
+            RenderPathToMap(pointB);
+            
             RenderVectorSquare(pointA, 0, 255, 0);
             RenderVectorSquare(pointB, 0, 255, 0);            
         }
 
         private void RenderPathToMap(RoadCell pathCell)
         {
-            while (pathCell.Next != null)
+            while (pathCell != null)
             {                
                 RenderVectorSquare(pathCell, 255, 0, 0);
-                pathCell = pathCell.Next;
+                pathCell = pathCell.Previous;
             }
         }
 

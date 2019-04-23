@@ -78,10 +78,12 @@
     <Compile Include="Maze\Maze.cs" />
     <Compile Include="Maze\MazeRenderer.cs" />
     <Compile Include="Model\HeightMap.cs" />
+    <Compile Include="Model\Neighbor.cs" />
     <Compile Include="Model\PathT.cs" />
     <Compile Include="Model\Point2.cs" />
     <Compile Include="Model\PriorityQueueT.cs" />
     <Compile Include="Model\RoadCell.cs" />
+    <Compile Include="Model\RoadCellNeighbor.cs" />
     <Compile Include="Roads\RoadCellMap.cs" />
     <Compile Include="Model\Vector2Int.cs" />
     <Compile Include="Model\Vector2T.cs" />

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using NLog;
 using _7DaysToDie.Maze;
 using _7DaysToDie.Model.Biomes;
@@ -59,7 +60,7 @@ namespace _7DaysToDieWorldUtil
 
         public static void HeightMapTest()
         {
-            using (var biome = new TestBiome(TestingPath, 1096, new NoiseFactory(555)))
+            using (var biome = new TestBiome(TestingPath, 1096, new NoiseFactory(555)))// new NoiseFactory(DateTime.Now.Millisecond)))
             {
                 biome.Generate();
             }

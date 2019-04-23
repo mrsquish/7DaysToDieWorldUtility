@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using _7DaysToDie.Model.Model;
@@ -19,6 +20,8 @@ namespace _7DaysToDie.Model
         private RoadCell[,] _map;
         private _7DaysToDie.Model.HeightMap _heightMap;
         private int _cellSize;
+        private int distanceFactor = 4;
+        private float _elevationFactor = 256;
 
         private RoadCell _origin;
         private RoadCell _destination;
@@ -37,12 +40,26 @@ namespace _7DaysToDie.Model
         {
             _origin = from;
             _destination = to;            
-            _getPathCost = (cell, roadCell) =>  WalkDirectEstimate(cell, roadCell, GetUnitDistance);
+            _getPathCost = (cell, roadCell) =>  WalkDirectEstimate(cell, roadCell, GetWeightedUnitDistance);
             _destination.CostFromOrigin = double.MaxValue;
-            _maximumCost = _getPathCost(_origin, _destination) * 2;
-            _getNeighbours = Get12RadiusNeighbours;            
+            _maximumCost = _getPathCost(_origin, _destination);
+            _getNeighbours = Get4RadiusNeighbours;            
             await PathFindingUsingLinkedCells(from);
             return to;
+        }
+
+        public async Task TestPath(RoadCell from, RoadCell to)
+        {
+            RoadCell walker = from;
+            do
+            {
+                var neighbors = _getNeighbours(walker).ToList();
+                foreach (var neighbor in neighbors)
+                {
+                    ConsiderRoute(walker, neighbor);
+                }
+                walker = walker.Previous;
+            } while (walker != to);
         }
 
         public RoadCell this[int x, int z] => _map[x, z];
@@ -55,23 +72,22 @@ namespace _7DaysToDie.Model
             {
                 if (waypoint.CostFromOrigin > _maximumCost)
                 {
-                    _logger.Warn("Too Costly - Bailing out");
+                    _logger.Info("Too Costly - Bailing out");
                 }
-                else if (GetDirectLineDistance(waypoint, _destination) < 16)
-                {
-                    _logger.Warn("Reached Destination");
+                else if (GetDirectLineDistance(waypoint, _destination) < distanceFactor)
+                {                    
                     ConsiderRoute(waypoint, _destination);
                 }
                 else
                 {
-                    var recursingNeighbors = _getNeighbours(waypoint).Select(async x =>
+                    var neighbors = _getNeighbours(waypoint).ToList();
+                    foreach (var neighbor in neighbors)
                     {
-                        if (ConsiderRoute(waypoint, x))
+                        if (ConsiderRoute(waypoint, neighbor))
                         {
-                            await PathFindingUsingLinkedCells(x);
+                            await PathFindingUsingLinkedCells(neighbor);
                         }
-                    });
-                    await Task.WhenAll(recursingNeighbors);
+                    }                    
                 }
             }
             catch (Exception exp)
@@ -87,33 +103,39 @@ namespace _7DaysToDie.Model
         {
             try
             {
-                lock (pointB)
+                if (pointA.Previous == pointB)
+                    return false; //We've backtracked completely
+                if ((int) pointB.DistanceFromOrigin == 0)
+                    pointB.DistanceFromOrigin = GetDirectLineDistance(_origin, pointB);
+                if (pointB != _destination && pointB.DistanceFromOrigin <= pointA.DistanceFromOrigin)
+                    return false; //We're circling back
+
+                //_logger.Info($"At [{pointB.X},{pointB.Z}] {pointB.DistanceFromOrigin} from Origin");
+                var costFromOrigin = pointA.CostFromOrigin + _getPathCost(pointA, pointB);
+                if (costFromOrigin > _destination.CostFromOrigin)
+                    return false;
+                
+                // PointB has already been hit on different route, only redirect when the 
+                // cost is lower.
+                if (pointB.Previous != null && pointB.CostFromOrigin <= costFromOrigin)
+                    return false;
+
+                // PointA already has a route assigned, only update it when the cost is lower
+                if (pointA.Next != null && pointA.Next.CostFromOrigin <= costFromOrigin)
+                    return false;
+
+                pointB.Previous = pointA;
+                pointA.Next = pointB;
+                pointB.CostFromOrigin = costFromOrigin;
+
+                if (pointB == _destination)
                 {
-                    if (pointA.Previous == pointB)
-                        return false; //We've backtracked completely
-                    if ((int) pointB.DistanceFromOrigin == 0)
-                        pointB.DistanceFromOrigin = GetDirectLineDistance(_origin, pointB);
-                    if (pointB.DistanceFromOrigin <= pointA.DistanceFromOrigin)
-                        return false; //We're circling back
-
-                    _logger.Info($"At [{pointB.X},{pointB.Z}] {pointB.DistanceFromOrigin} from Origin");
-                    var costFromOrigin = pointA.CostFromOrigin + _getPathCost(pointA, pointB);
-                    if (costFromOrigin > _destination.CostFromOrigin)
-                        return false;
-                    
-                    if (pointB.Previous != null && pointB.CostFromOrigin < costFromOrigin)
-                        return false;
-
-                    if (pointB.Next != null)
-                        _logger.Warn($"Found a faster route! [{pointB.X},{pointB.Z}]");
-
-                    _logger.Info($"Persuing [{pointB.X},{pointB.Z}]");
-                    pointB.Previous = pointA;
-                    pointA.Next = pointB;
-                    pointB.CostFromOrigin = costFromOrigin;
-                    return (pointA != pointB);                   
+                    _maximumCost = costFromOrigin;
+                    _logger.Warn($"Found a faster route to destination [{pointA.X},{pointA.Z}] Cost: {_maximumCost}");
+                    return false;
                 }
 
+                return (pointA != pointB);                   
             }
             catch (Exception exp)
             {
@@ -121,7 +143,7 @@ namespace _7DaysToDie.Model
                 throw;
             }
         }
-
+        
 
         private double GetDirectLineDistance(Vector2<int> arg, Vector2<int> destination)
         {            
@@ -133,41 +155,64 @@ namespace _7DaysToDie.Model
             return Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
         }
 
-        private double WalkDirectEstimate(RoadCell arg, RoadCell destination, Func<RoadCell, RoadCell, int, double> getDistance)
+        private double WalkDirectEstimate(RoadCell arg, RoadCell destination, Func<RoadCell, RoadCell, double> getRouteCost)
         {
-            var walker = new Vector2<int>(arg.X, arg.Z);
-            var previousCell = arg;
-            var factors = GetWalkerFactors(arg, destination);
-            double totalWalkingCost = 0;
-            int stepCounter = 1;
-            do
+            try
             {
-                walker.X = (int)Math.Round(factors.X * stepCounter, 0);
-                walker.Z = (int)Math.Round(factors.Z * stepCounter, 0);
-                totalWalkingCost += getDistance(previousCell, _map[walker.X, walker.Z], 8);
-                stepCounter++;
-            } while (walker.X != destination.X && walker.Z != destination.Z);
-            //_logger.Info($"From ({arg.X},{arg.Z})->({destination.X},{destination.Z}) Distance = {totalWalkingCost}");
-            return totalWalkingCost;
+                var walker = new Vector2<int>(arg.X, arg.Z);
+                var previousCell = arg;
+                var factors = GetWalkerFactors(arg, destination);
+                double totalWalkingCost = 0;
+                int stepCounter = 1;
+                do
+                {
+                    walker.X = previousCell.X + (int) Math.Round(factors.X * stepCounter, 0);
+                    walker.Z = previousCell.Z + (int) Math.Round(factors.Z * stepCounter, 0);
+                    totalWalkingCost += getRouteCost(previousCell, _map[walker.X, walker.Z]);
+                    stepCounter++;
+                } while (walker.X != destination.X && walker.Z != destination.Z);                
+                return totalWalkingCost;
+            }
+            catch (Exception exp)
+            {
+                _logger.Error(exp);                
+            }
+            return double.MaxValue;
         }
 
-        private Vector2<float> GetWalkerFactors(RoadCell arg, RoadCell destination)
+        private Vector2<float> GetWalkerFactors(RoadCell origin, RoadCell destination)
         {
-            var xDistance = arg.X - destination.X;
-            var zDistance = arg.Z - destination.Z;
-            var factors = new Vector2<float>(1, 1);
+            var xDistance = destination.X - origin.X;
+            var zDistance = destination.Z - origin.Z;
+            var factors = new Vector2<float>(Math.Sign(xDistance), Math.Sign(zDistance));
             if (Math.Abs(xDistance) > Math.Abs(zDistance))
-                factors.Z = (float)Math.Abs(zDistance) / (float)Math.Abs(xDistance);
+                factors.Z = (float)zDistance / (float)Math.Abs(xDistance);
             if (Math.Abs(zDistance) > Math.Abs(xDistance))
-                factors.X = (float)Math.Abs(xDistance) / (float)Math.Abs(zDistance);
+                factors.X = (float)xDistance / (float)Math.Abs(zDistance);
             return factors;
         }
+
+        private double GetWeightedUnitDistance(RoadCell pointA, RoadCell pointB)
+        {
+            //var directLineDistance = GetDirectLineDistance(pointA, pointB);
+            var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
+            var weightedDifference = Math.Pow(2, Math.Min(32, heightDifference / 124));
+            return weightedDifference;// * (directLineDistance / distanceFactor);
+
+            if (heightDifference < _elevationFactor)
+                return heightDifference;
+
+            var heightFactor = 1 + Math.Min(8, Math.Floor(heightDifference / 256));
+            
+            return (heightFactor * heightDifference);
+        }
+
 
         private double GetUnitDistance(RoadCell pointA, RoadCell pointB, int heightFactor)
         {
             var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
-            var diagonalDistance = 0;//DiagonalDistance(pointA, pointB);
-            return (heightFactor * heightDifference) + (diagonalDistance * 256);
+            
+            return (heightFactor * heightDifference);
         }
 
         private double DiagonalDistance(Vector2<int> node, Vector2<int> goal)
@@ -249,18 +294,25 @@ namespace _7DaysToDie.Model
             return neighbours;
         }
 
+        private IEnumerable<RoadCell> Get4RadiusNeighbours(RoadCell origin)
+        {
+            return GetRadiusNeighbours(origin, PathFinding.TwelveRadius4Points, 5.7);
+        }
+        
         private IEnumerable<RoadCell> Get12RadiusNeighbours(RoadCell origin)
+        {
+            return GetRadiusNeighbours(origin, PathFinding.TwelveRadius16Points, 23);
+        }
+
+        private IEnumerable<RoadCell> GetRadiusNeighbours(RoadCell origin, List<Vector2<int>> offSets, double backTrackDistanceCheck)
         {
             try
             {
-                var neighbours = PathFinding
-                    .TwelveRadius16Points
+                var neighbours = offSets
                     .Select(vector2 => new Vector2<int>(vector2.X + origin.X, vector2.Z + origin.Z));
                 return neighbours
                     .Where(vector2 => vector2.X > 0 && vector2.X < _size
-                                      && vector2.Z > 0 && vector2.Z < _size
-                                      && (origin.Previous == null
-                                          || GetDirectLineDistance(origin.Previous, vector2) > 23))
+                                                    && vector2.Z > 0 && vector2.Z < _size)
                     .Select(vector2 => _map[vector2.X, vector2.Z]);
 
             }
