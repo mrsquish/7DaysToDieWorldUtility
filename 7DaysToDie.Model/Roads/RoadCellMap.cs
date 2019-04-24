@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using _7DaysToDie.Model;
 using _7DaysToDie.Model.Model;
-using _7DaysToDie.Roads;
 
-namespace _7DaysToDie.Model
+namespace _7DaysToDie.Roads
 {
     public class RoadCellMap
     {
@@ -32,8 +29,15 @@ namespace _7DaysToDie.Model
             _heightMap = heightMap;
             _cellSize = resolutionScale;
             _size = (_heightMap.Size / resolutionScale);
-            _map = new RoadCell[_size, _size];
+            _map = new RoadCell[_size, _size];            
             GenerateCellMetricsMap();
+        }
+
+        public Path<RoadCell> BuildPathUsingAStar(RoadCell from, RoadCell to)
+        {
+            _getPathCost = (cell, roadCell) => WalkDirectEstimate(cell, roadCell, GetWeightedUnitDistance);
+            return PathFinding.AStarPathFindingUsingPriorityQueue(from, to, Get4RadiusNeighbours, _getPathCost,
+                _getPathCost);
         }
 
         public async Task<RoadCell> BuildPath(RoadCell from, RoadCell to)
@@ -46,20 +50,6 @@ namespace _7DaysToDie.Model
             _getNeighbours = Get4RadiusNeighbours;            
             await PathFindingUsingLinkedCells(from);
             return to;
-        }
-
-        public async Task TestPath(RoadCell from, RoadCell to)
-        {
-            RoadCell walker = from;
-            do
-            {
-                var neighbors = _getNeighbours(walker).ToList();
-                foreach (var neighbor in neighbors)
-                {
-                    ConsiderRoute(walker, neighbor);
-                }
-                walker = walker.Previous;
-            } while (walker != to);
         }
 
         public RoadCell this[int x, int z] => _map[x, z];
@@ -83,9 +73,16 @@ namespace _7DaysToDie.Model
                     var neighbors = _getNeighbours(waypoint).ToList();
                     foreach (var neighbor in neighbors)
                     {
-                        if (ConsiderRoute(waypoint, neighbor))
+                        if (neighbor != null)
                         {
-                            await PathFindingUsingLinkedCells(neighbor);
+                            if (ConsiderRoute(waypoint, neighbor))
+                            {
+                                await PathFindingUsingLinkedCells(neighbor);
+                            }
+                        }
+                        else
+                        {
+                            _logger.Info("Neighbor is null?");
                         }
                     }                    
                 }
@@ -196,9 +193,11 @@ namespace _7DaysToDie.Model
         {
             //var directLineDistance = GetDirectLineDistance(pointA, pointB);
             var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
+            //return heightDifference;
+            /*
             var weightedDifference = Math.Pow(2, Math.Min(32, heightDifference / 124));
             return weightedDifference;// * (directLineDistance / distanceFactor);
-
+            */
             if (heightDifference < _elevationFactor)
                 return heightDifference;
 
@@ -224,7 +223,6 @@ namespace _7DaysToDie.Model
 
         private void GenerateCellMetricsMap()
         {
-            _map = new RoadCell[_size, _size];
             CellLoop((x, z) => _map[x, z] = GetCellMetrics(x, z));
         }
 
@@ -241,13 +239,17 @@ namespace _7DaysToDie.Model
 
         public RoadCell GetCellMetrics(int x, int z)
         {
+            var mapX = x * _cellSize;
+            var mapZ = z * _cellSize;
+            var cellBoundary = _cellSize - 1;
             var metrics = new RoadCell()
             {
+                
                 Avg = ((
-                           _heightMap[x + _cellSize, z] +
-                           _heightMap[x + _cellSize, z + _cellSize] +
-                           _heightMap[x, z + _cellSize] +
-                           _heightMap[x, z]) / 4),
+                           _heightMap[mapX + cellBoundary, mapZ] +
+                           _heightMap[mapX + cellBoundary, mapZ + cellBoundary] +
+                           _heightMap[mapX, mapZ + cellBoundary] +
+                           _heightMap[mapX, mapZ]) / 4),
                 X = x,
                 Z = z
             };

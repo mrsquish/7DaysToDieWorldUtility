@@ -32,8 +32,7 @@ namespace _7DaysToDie.Roads
         {                        
             _maxPoiCount = maxPoiCount;
             _heightMap = heightMap;
-            _map = new RgbBitMap(heightMap.Size);
-            //_map.Initialise(0,0,0);
+            _map = new RgbBitMap(heightMap.Size);            
             _random = new Random(DateTime.Now.Millisecond + (DateTime.Now.Minute <<  9));
         }
 
@@ -66,14 +65,22 @@ namespace _7DaysToDie.Roads
 
         private void GenerateRoad(RoadCell pointA, RoadCell pointB, RoadCellMap roadMap)
         {
-            var end = roadMap.BuildPath(pointA, pointB).Result;
-            roadMap.TestPath(pointA, pointB);
-            RenderPathToMap(pointB);
-            
+            var end = roadMap.BuildPath(pointA, pointB).Result;            
+            //var path = roadMap.BuildPathUsingAStar(pointA, pointB);
+            RenderPathToMap(pointB);            
             RenderVectorSquare(pointA, 0, 255, 0);
             RenderVectorSquare(pointB, 0, 255, 0);            
         }
 
+        private void RenderPathToMap(Path<RoadCell> path)
+        {
+            foreach (var pathCell in path)
+            {
+                var vector = pathCell.ToVector2(cellSize);
+                RenderVectorSquare(pathCell, 255, 0, 0);
+            }
+        }
+        
         private void RenderPathToMap(RoadCell pathCell)
         {
             while (pathCell != null)

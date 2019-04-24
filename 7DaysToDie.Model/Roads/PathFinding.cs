@@ -73,16 +73,16 @@ namespace _7DaysToDie.Roads
             return null;
         }
 
-        public static Path<Node> AStarPathFindingUsingPriorityQueue<Node>(
-            Node start,
-            Node destination,
-            Func<Node,IEnumerable<Node>> getNeighbours,
-            Func<Node, Node, double> distance,
-            Func<Node, Node, double> estimate)
+        public static Path<RoadCell> AStarPathFindingUsingPriorityQueue<RoadCell>(
+            RoadCell start,
+            RoadCell destination,
+            Func<RoadCell, IEnumerable<RoadCell>> getNeighbours,
+            Func<RoadCell, RoadCell, double> distance,
+            Func<RoadCell, RoadCell, double> estimate)
         {
-            var closed = new HashSet<Node>();
-            var queue = new PriorityQueue<double, Path<Node>>();
-            queue.Enqueue(0, new Path<Node>(start));
+            var closed = new HashSet<RoadCell>();
+            var queue = new PriorityQueue<double, Path<RoadCell>>();
+            queue.Enqueue(0, new Path<RoadCell>(start));
             while (!queue.IsEmpty)
             {
                 var path = queue.Dequeue();
@@ -91,7 +91,7 @@ namespace _7DaysToDie.Roads
                 if (path.LastStep.Equals(destination))
                     return path;
                 closed.Add(path.LastStep);
-                foreach (Node n in getNeighbours(path.LastStep))
+                foreach (RoadCell n in getNeighbours(path.LastStep))
                 {
                     double d = distance(path.LastStep, n);
                     var newPath = path.AddStep(n, d);
