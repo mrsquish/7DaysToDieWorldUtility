@@ -9,55 +9,47 @@ using _7DaysToDie.Model.Model;
 
 namespace _7DaysToDie.Roads
 {
-    public class RoadCellMap
+    public class RoadCellMapLong
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();
         private int _size;
-        private Func<RoadCell, IEnumerable<RoadCell>> _getNeighbours;
-        private Func<RoadCell, RoadCell, double> _getPathCost;
-        private RoadCell[,] _map;
+        private Func<RoadCellLong, IEnumerable<RoadCellLong>> _getNeighbours;
+        private Func<RoadCellLong, RoadCellLong, ulong> _getPathCost;
+        private RoadCellLong[,] _map;
         private HeightMap<ushort> _heightMap;
         private int _cellSize;
-        private int distanceFactor = 4;
-        private float _elevationFactor = 256;
+        private ulong distanceFactor = 4;
+        private ulong _elevationFactor = 256;
 
-        private RoadCell _origin;
-        private RoadCell _destination;
-        private double _maximumCost;
+        private RoadCellLong _origin;
+        private RoadCellLong _destination;
+        private ulong _maximumCost;
 
-        public RoadCellMap(HeightMap<ushort> heightMap, int resolutionScale)
+        public RoadCellMapLong(HeightMap<ushort> heightMap, int resolutionScale)
         {
             _heightMap = heightMap;
             _cellSize = resolutionScale;
             _size = (_heightMap.Size / resolutionScale);
-            _map = new RoadCell[_size, _size];            
+            _map = new RoadCellLong[_size, _size];            
             GenerateCellMetricsMap();
         }
 
-        public Path<RoadCell> BuildPathUsingAStar(RoadCell from, RoadCell to)
-        {
-            _getPathCost = (cell, roadCell) => WalkDirectEstimate(cell, roadCell, GetWeightedUnitDistance);
-            return PathFinding.AStarPathFindingUsingPriorityQueue(from, to, Get4RadiusNeighbours, _getPathCost,
-                _getPathCost);
-        }
-
-        public async Task<RoadCell> BuildPath(RoadCell from, RoadCell to)
+        public async Task<RoadCellLong> BuildPath(RoadCellLong from, RoadCellLong to)
         {
             _origin = from;
             _destination = to;            
-            _getPathCost = (cell, roadCell) =>  WalkDirectEstimate(cell, roadCell, GetWeightedUnitDistance);
-            _destination.CostFromOrigin = double.MaxValue;
+            _getPathCost = (cell, roadCell) =>  WalkDirectEstimate(cell, roadCell, GetUnitRouteCost);
+            _destination.CostFromOrigin = long.MaxValue;
             _maximumCost = _getPathCost(_origin, _destination);
             _getNeighbours = Get4RadiusNeighbours;            
             await PathFindingUsingLinkedCells(from);
             return to;
         }
 
-        public RoadCell this[int x, int z] => _map[x, z];
-        public HeightMap<ushort> HeightMap => _heightMap;
+        public RoadCellLong this[int x, int z] => _map[x, z];
 
         public async Task PathFindingUsingLinkedCells(
-            RoadCell waypoint
+            RoadCellLong waypoint
         )
         {
             try
@@ -97,8 +89,8 @@ namespace _7DaysToDie.Roads
         }
 
         private bool ConsiderRoute(
-            RoadCell pointA,
-            RoadCell pointB)
+            RoadCellLong pointA,
+            RoadCellLong pointB)
         {
             try
             {
@@ -144,24 +136,24 @@ namespace _7DaysToDie.Roads
         }
         
 
-        private double GetDirectLineDistance(Vector2<int> arg, Vector2<int> destination)
+        private ulong GetDirectLineDistance(Vector2<int> arg, Vector2<int> destination)
         {            
             return GetDirectLineDistance(Math.Abs(arg.X - destination.X), Math.Abs(arg.Z - destination.Z));
         }
 
-        private double GetDirectLineDistance(int a, int b)
+        private ulong GetDirectLineDistance(int a, int b)
         {
-            return Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+            return (ulong)Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
         }
 
-        private double WalkDirectEstimate(RoadCell arg, RoadCell destination, Func<RoadCell, RoadCell, double> getRouteCost)
+        private ulong WalkDirectEstimate(RoadCellLong arg, RoadCellLong destination, Func<RoadCellLong, RoadCellLong, ulong> getRouteCost)
         {
             try
             {
                 var walker = new Vector2<int>(arg.X, arg.Z);
                 var previousCell = arg;
                 var factors = GetWalkerFactors(arg, destination);
-                double totalWalkingCost = 0;
+                ulong totalWalkingCost = 0;
                 int stepCounter = 1;
                 do
                 {
@@ -176,10 +168,10 @@ namespace _7DaysToDie.Roads
             {
                 _logger.Error(exp);                
             }
-            return double.MaxValue;
+            return long.MaxValue;
         }
 
-        private Vector2<float> GetWalkerFactors(RoadCell origin, RoadCell destination)
+        private Vector2<float> GetWalkerFactors(RoadCellLong origin, RoadCellLong destination)
         {
             var xDistance = destination.X - origin.X;
             var zDistance = destination.Z - origin.Z;
@@ -191,29 +183,12 @@ namespace _7DaysToDie.Roads
             return factors;
         }
 
-        private double GetWeightedUnitDistance(RoadCell pointA, RoadCell pointB)
+        private ulong GetUnitRouteCost(RoadCellLong pointA, RoadCellLong pointB)
         {
-            //var directLineDistance = GetDirectLineDistance(pointA, pointB);
-            var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
-            //return heightDifference;
-            /*
-            var weightedDifference = Math.Pow(2, Math.Min(32, heightDifference / 124));
-            return weightedDifference;// * (directLineDistance / distanceFactor);
-            */
-            if (heightDifference < _elevationFactor)
-                return heightDifference;
-
-            var heightFactor = 1 + Math.Min(8, Math.Floor(heightDifference / 256));
-            
-            return (heightFactor * heightDifference);
-        }
-
-
-        private double GetUnitDistance(RoadCell pointA, RoadCell pointB, int heightFactor)
-        {
-            var heightDifference = Math.Abs(pointA.Avg - pointB.Avg);
-            
-            return (heightFactor * heightDifference);
+            var heightDifference = Math.Abs((long)pointA.Avg - (long)pointB.Avg);
+            if (heightDifference > 512)
+                return (ulong)heightDifference << 4;
+            return (ulong)heightDifference;
         }
 
         private double DiagonalDistance(Vector2<int> node, Vector2<int> goal)
@@ -239,28 +214,28 @@ namespace _7DaysToDie.Roads
             }
         }
 
-        public RoadCell GetCellMetrics(int x, int z)
+        public RoadCellLong GetCellMetrics(int x, int z)
         {
             var mapX = x * _cellSize;
             var mapZ = z * _cellSize;
             var cellBoundary = _cellSize - 1;
-            var metrics = new RoadCell()
+            var metrics = new RoadCellLong()
             {
                 
-                Avg = ((
+                Avg = (ushort)((
                            _heightMap[mapX + cellBoundary, mapZ] +
                            _heightMap[mapX + cellBoundary, mapZ + cellBoundary] +
                            _heightMap[mapX, mapZ + cellBoundary] +
-                           _heightMap[mapX, mapZ]) / 4),
+                           _heightMap[mapX, mapZ]) / 4f),
                 X = x,
                 Z = z
-            };
+            };            
             return metrics;
         }
 
-        private IEnumerable<RoadCell> Get8Neighbours(RoadCell fromCell)
+        private IEnumerable<RoadCellLong> Get8Neighbours(RoadCellLong fromCell)
         {
-            var neighbours = new List<RoadCell>();
+            var neighbours = new List<RoadCellLong>();
             if (fromCell.X > 0)
             {
                 neighbours.Add(_map[fromCell.X - 1, fromCell.Z]);
@@ -287,17 +262,17 @@ namespace _7DaysToDie.Roads
             return neighbours;
         }
 
-        private IEnumerable<RoadCell> Get4RadiusNeighbours(RoadCell origin)
+        private IEnumerable<RoadCellLong> Get4RadiusNeighbours(RoadCellLong origin)
         {
             return GetRadiusNeighbours(origin, PathFinding.TwelveRadius4Points, 5.7);
         }
         
-        private IEnumerable<RoadCell> Get12RadiusNeighbours(RoadCell origin)
+        private IEnumerable<RoadCellLong> Get12RadiusNeighbours(RoadCellLong origin)
         {
             return GetRadiusNeighbours(origin, PathFinding.TwelveRadius16Points, 23);
         }
 
-        private IEnumerable<RoadCell> GetRadiusNeighbours(RoadCell origin, List<Vector2<int>> offSets, double backTrackDistanceCheck)
+        private IEnumerable<RoadCellLong> GetRadiusNeighbours(RoadCellLong origin, List<Vector2<int>> offSets, double backTrackDistanceCheck)
         {
             try
             {

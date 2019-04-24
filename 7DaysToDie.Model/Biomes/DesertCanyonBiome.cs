@@ -33,14 +33,13 @@ namespace _7DaysToDie.Model.Biomes
 
         public override void Generate()
         {
-            using (var heightMap = new HeightMap(Size))
-            {
-                SetLevels();
-                heightMap.Create();
-                RegenerateHeightMap(heightMap);
+            var heightMap = new HeightMap(Size);
+            SetLevels();
+            heightMap.Create();
+            RegenerateHeightMap(heightMap);
 
-                heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));
-            }
+            heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));
+            
         }
 
         private void SetLevels()

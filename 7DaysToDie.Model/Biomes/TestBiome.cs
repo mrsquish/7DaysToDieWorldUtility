@@ -26,21 +26,21 @@ namespace _7DaysToDie.Model.Biomes
 
         public override void Generate()
         {
-            using (var heightMap = new HeightMap(Size))
-            {
-                SetLevels();
-                heightMap.Create();
-                RegenerateHeightMap(heightMap);
-                GenerateRoads(heightMap);
-                //Erode(heightMap);
+            var heightMap = new HeightMap<ushort>(Size);
+            SetLevels();
+            heightMap.Create();
+            RegenerateHeightMap(heightMap);
+            GenerateRoads(heightMap);
+            //Erode(heightMap);
 
-                heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"));
-            }
+            heightMap.Save(Path.Combine(BaseDirectory, "dtm.raw"), arg => arg);
+
         }
 
-        private void GenerateRoads(HeightMap heightMap)
+        private void GenerateRoads(HeightMap<ushort> heightMap)
         {
-            var generator = new RoadGenerator(2, heightMap);
+            //var generator = new RoadGenerator(2, heightMap);
+            var generator = new RoadGenerator<double>(2, () => new RoadCellMapDouble(heightMap, 8));
             generator.Generate();
             generator.Save(BaseDirectory);
         }
@@ -62,7 +62,7 @@ namespace _7DaysToDie.Model.Biomes
             _featureRockNoise.Amplitude = (float)ushort.MaxValue / 15;            
         }
 
-        public void RegenerateHeightMap(HeightMap heightMap)
+        public void RegenerateHeightMap(HeightMap<ushort> heightMap)
         {
             for (int y = 0; y < Size; y++)
             {
@@ -74,14 +74,14 @@ namespace _7DaysToDie.Model.Biomes
             }
         }
 
-        private float GetPixelShade(int x, int y)
+        private ushort GetPixelShade(int x, int y)
         {
             float baseLandscape = _generalRollingBaseNoise.GetNoise(x, y);
             float level = _generalLandscapeNoise.GetNoise(x, y);
 
             level = WorldSettings.GroundLevel + baseLandscape + level;
             
-            return level < 0 ? 0 : level;
+            return (ushort)(level < 0 ? 0 : level);
         }
 
 

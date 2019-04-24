@@ -122,7 +122,7 @@ namespace _7DaysToDie.Maze
 
         public void Dispose()
         {
-            _heightMap?.Dispose();
+            
         }
     }
 }

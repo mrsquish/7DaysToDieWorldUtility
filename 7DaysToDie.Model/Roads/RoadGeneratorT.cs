@@ -9,44 +9,45 @@ using System.Threading.Tasks;
 using System.Windows;
 using NLog;
 using _7DaysToDie.Base;
+using _7DaysToDie.Contracts;
 using _7DaysToDie.Model.Model;
 
 namespace _7DaysToDie.Roads
 {
     
 
-    public class RoadGenerator
+    public class RoadGenerator<T>
+        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {
         protected static ILogger _logger = LogManager.GetCurrentClassLogger();        
         private readonly int _maxPoiCount;
-        private readonly HeightMap<ushort> _heightMap;
-        private readonly RgbBitMap _map;
+        private readonly Func<RoadCellMap<T>> _getCellMap;
+        private RgbBitMap _map;
         private readonly int _poiMinDistance = 70;
 
         private int cellSize = 8;
         
-        private List<RoadCell> _poiPossibleLocations = new List<RoadCell>();
-        private List<RoadCell> _poiLocations = new List<RoadCell>();
+        private List<ITypedPathCell<T>> _poiPossibleLocations = new List<ITypedPathCell<T>>();
+        private List<ITypedPathCell<T>> _poiLocations = new List<ITypedPathCell<T>>();
         private Random _random;
 
-        public RoadGenerator(int maxPoiCount , HeightMap<ushort> heightMap)
+        public RoadGenerator(int maxPoiCount, Func<RoadCellMap<T>> getCellMap)
         {                        
             _maxPoiCount = maxPoiCount;
-            _heightMap = heightMap;
-            _map = new RgbBitMap(heightMap.Size);            
+            _getCellMap = getCellMap;            
             _random = new Random(DateTime.Now.Millisecond + (DateTime.Now.Minute <<  9));
         }
 
         public void Generate()
-        {
-            
+        {            
             //FindPoiLocations();
             GenerateRoadsBetweenPois();
         }
 
         private void GenerateRoadsBetweenPois()
         {
-            var roadMap = new RoadCellMap(_heightMap, 8);
+            var roadMap = _getCellMap();
+            _map = new RgbBitMap(roadMap.HeightMap.Size);
             _poiLocations.Add(roadMap[100, 15]);
             _poiLocations.Add(roadMap[40, 120]);
 
@@ -64,16 +65,15 @@ namespace _7DaysToDie.Roads
             }
         }
 
-        private void GenerateRoad(RoadCell pointA, RoadCell pointB, RoadCellMap roadMap)
+        private void GenerateRoad(ITypedPathCell<T> pointA, ITypedPathCell<T> pointB, RoadCellMap<T> roadMap)
         {
-            var end = roadMap.BuildPath(pointA, pointB).Result;            
-            //var path = roadMap.BuildPathUsingAStar(pointA, pointB);
+            var end = roadMap.BuildPath(pointA, pointB).Result;                        
             RenderPathToMap(pointB);            
             RenderVectorSquare(pointA, 0, 255, 0);
             RenderVectorSquare(pointB, 0, 255, 0);            
         }
 
-        private void RenderPathToMap(Path<RoadCell> path)
+        private void RenderPathToMap(Path<ITypedPathCell<T>> path)
         {
             foreach (var pathCell in path)
             {
@@ -82,7 +82,7 @@ namespace _7DaysToDie.Roads
             }
         }
         
-        private void RenderPathToMap(RoadCell pathCell)
+        private void RenderPathToMap(ITypedPathCell<T> pathCell)
         {
             while (pathCell != null)
             {                
@@ -91,7 +91,7 @@ namespace _7DaysToDie.Roads
             }
         }
 
-        private void RenderVectorSquare(RoadCell vector, byte Red, byte Green, byte Blue)
+        private void RenderVectorSquare(ITypedPathCell<T> vector, byte Red, byte Green, byte Blue)
         {
             RenderVectorSquare(new Vector2<int>{ X= vector.X* cellSize, Z = vector.Z * cellSize}, Red, Green, Blue);
         }
@@ -117,7 +117,7 @@ namespace _7DaysToDie.Roads
             }
         }
 
-        private RoadCell GetRandomPoiLocation()
+        private ITypedPathCell<T> GetRandomPoiLocation()
         {
             var location = _poiPossibleLocations[_random.Next(0, _poiPossibleLocations.Count - 1)];
             while (_poiLocations.Any(cell => Math.Abs(cell.X - location.X) < _poiMinDistance && Math.Abs(cell.Z - location.Z) < _poiMinDistance))

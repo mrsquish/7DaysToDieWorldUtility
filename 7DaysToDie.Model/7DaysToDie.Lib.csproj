@@ -58,6 +58,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\HeightMapT.cs" />
     <Compile Include="Base\RgbBitMap.cs" />
     <Compile Include="Base\HeightMap.cs" />
     <Compile Include="Base\WorldSettings.cs" />
@@ -68,22 +69,29 @@
     <Compile Include="Biomes\NastyBiome.cs" />
     <Compile Include="Contracts\IBiome.cs" />
     <Compile Include="Contracts\IHasNeighbours.cs" />
-    <Compile Include="Contracts\IPathCell.cs" />
+    <Compile Include="Contracts\ITypedPathCell.cs" />
+    <Compile Include="Contracts\IVector2T.cs" />
     <Compile Include="Decoration.cs" />
     <Compile Include="Erosion\Erosion.cs" />
     <Compile Include="Erosion\ErosionMine.cs" />
     <Compile Include="Erosion\ErosionParameters.cs" />
     <Compile Include="Extensions\BaseExtensions.cs" />
     <Compile Include="Extensions\Biome.cs" />
+    <Compile Include="Images\ImageHandling.cs" />
     <Compile Include="Maze\Maze.cs" />
     <Compile Include="Maze\MazeRenderer.cs" />
+    <Compile Include="Model\DelegatedRoadCellT.cs" />
     <Compile Include="Model\HeightMap.cs" />
     <Compile Include="Model\Neighbor.cs" />
     <Compile Include="Model\PathT.cs" />
     <Compile Include="Model\Point2.cs" />
     <Compile Include="Model\PriorityQueueT.cs" />
+    <Compile Include="Model\RoadCell - Copy.cs" />
+    <Compile Include="Model\RoadCellT.cs" />
     <Compile Include="Model\RoadCell.cs" />
-    <Compile Include="Model\RoadCellNeighbor.cs" />
+    <Compile Include="Roads\RoadCellMapDouble.cs" />
+    <Compile Include="Roads\RoadCellMapT.cs" />
+    <Compile Include="Roads\RoadCellMapLong.cs" />
     <Compile Include="Roads\RoadCellMap.cs" />
     <Compile Include="Model\Vector2Int.cs" />
     <Compile Include="Model\Vector2T.cs" />
@@ -97,6 +105,7 @@
     <Compile Include="Prefabs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roads\PathFinding.cs" />
+    <Compile Include="Roads\RoadGeneratorT.cs" />
     <Compile Include="Roads\RoadGenerator.cs" />
     <Compile Include="TFPCodeReference.cs" />
     <Compile Include="Model\Vector3T.cs" />
@@ -107,8 +116,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
